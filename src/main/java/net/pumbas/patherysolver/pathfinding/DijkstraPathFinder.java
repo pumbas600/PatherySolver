@@ -7,7 +7,6 @@ import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import net.pumbas.patherysolver.models.PatheryMap;
 import net.pumbas.patherysolver.models.Position;
-import net.pumbas.patherysolver.models.Solution;
 import net.pumbas.patherysolver.models.TileType;
 
 @RequiredArgsConstructor
@@ -17,7 +16,7 @@ public class DijkstraPathFinder implements PathFinder {
 
   @Override
   public int getPathLength(
-      Solution solution,
+      Set<Position> walls,
       Set<Position> startPositions,
       Set<Position> endPositions
   ) {
@@ -44,9 +43,7 @@ public class DijkstraPathFinder implements PathFinder {
         }
 
         TileType tileType = this.map.getTile(neighbour);
-        if (tileType.isBlocked()
-            || solution.getWallPositions().contains(neighbour)
-            || visited.contains(neighbour)) {
+        if (tileType.isBlocked() || walls.contains(neighbour) || visited.contains(neighbour)) {
           continue;
         }
 
