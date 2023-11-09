@@ -11,6 +11,8 @@ public class PatheryMap {
   @Getter
   private final int height;
   @Getter
+  private final int maxWalls;
+  @Getter
   private final List<Position> startTiles = new ArrayList<>();
   @Getter
   private final List<Position> finishTiles = new ArrayList<>();
@@ -18,23 +20,25 @@ public class PatheryMap {
   private final TileType[][] map;
   private final List<Position> checkpoints;
 
-  public PatheryMap(int width, int height, List<Position> checkpoints) {
+  public PatheryMap(int width, int height, int maxWalls, List<Position> checkpoints) {
     this.width = width;
     this.height = height;
+    this.maxWalls = maxWalls;
     this.map = new TileType[width][height];
     this.checkpoints = checkpoints;
   }
 
-  public PatheryMap(TileType[][] map, List<Position> checkpoints) {
+  public PatheryMap(TileType[][] map, int maxWalls, List<Position> checkpoints) {
     this.width = map.length;
     this.height = this.width == 0 ? 0 : map[0].length;
+    this.maxWalls = maxWalls;
     this.map = map;
     this.checkpoints = checkpoints;
     this.findStartAndFinishTiles();
   }
 
-  public PatheryMap(String[] codedMap, List<Position> checkpoints) {
-    this(TileType.decode(codedMap), checkpoints);
+  public PatheryMap(String[] codedMap, int maxWalls, List<Position> checkpoints) {
+    this(TileType.decode(codedMap), maxWalls, checkpoints);
   }
 
   private void findStartAndFinishTiles() {
