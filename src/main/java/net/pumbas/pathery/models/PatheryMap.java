@@ -1,6 +1,7 @@
 package net.pumbas.pathery.models;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import lombok.Getter;
 
@@ -17,11 +18,11 @@ public class PatheryMap {
   @Getter
   private final Set<Position> finishTiles = new HashSet<>();
   @Getter
-  private final Set<Position> checkpoints;
+  private final List<Position> checkpoints;
 
   private final TileType[][] map;
 
-  public PatheryMap(int width, int height, int maxWalls, Set<Position> checkpoints) {
+  public PatheryMap(int width, int height, int maxWalls, List<Position> checkpoints) {
     this.width = width;
     this.height = height;
     this.maxWalls = maxWalls;
@@ -29,7 +30,7 @@ public class PatheryMap {
     this.checkpoints = checkpoints;
   }
 
-  public PatheryMap(TileType[][] map, int maxWalls, Set<Position> checkpoints) {
+  public PatheryMap(TileType[][] map, int maxWalls, List<Position> checkpoints) {
     this.width = map.length;
     this.height = this.width == 0 ? 0 : map[0].length;
     this.maxWalls = maxWalls;
