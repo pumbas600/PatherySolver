@@ -8,16 +8,17 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum TileType {
+  WALL('w', "Wall", true),
   OPEN('o', "Open"),
   START('s', "Start"),
   FINISH('f', "Finish"),
   CHECKPOINT('c', "Checkpoint"),
-  ROCK('r', "Rock"),
+  ROCK('r', "Rock", true),
   TELEPORT_IN('t', "Teleport In"),
   TELEPORT_OUT('u', "Teleport Out"),
   UNBUILDABLE('p', "Unbuildable"),
   DIRECTIONAL_FORCE('z', "Directional Force"),
-  SINGLE_PATH_ROCK('x', "Single-Path-Rock");
+  SINGLE_PATH_ROCK('x', "Single-Path-Rock", true);
 
   private static final Map<Character, TileType> codeMap = new HashMap<>();
 
@@ -29,6 +30,11 @@ public enum TileType {
 
   private final char code;
   private final String name;
+  private final boolean isBlocked;
+
+  TileType(char code, String name) {
+    this(code, name, false);
+  }
 
   public static TileType fromCode(char code) {
     return codeMap.get(code);
