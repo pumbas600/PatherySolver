@@ -12,7 +12,7 @@ public class Position {
   private final int x;
   private final int y;
 
-  public boolean equals(final int x, final int y) {
+  public boolean equals(int x, int y) {
     return this.x == x && this.y == y;
   }
 

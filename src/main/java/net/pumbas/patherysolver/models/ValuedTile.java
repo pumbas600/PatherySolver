@@ -14,7 +14,7 @@ public class ValuedTile {
    * @param tileType The tile type to compare to
    * @return {@code true} if this tile is of the given {@link TileType}, {@code false} otherwise
    */
-  public boolean is(final TileType tileType) {
+  public boolean is(TileType tileType) {
     return this.tileType == tileType;
   }
 

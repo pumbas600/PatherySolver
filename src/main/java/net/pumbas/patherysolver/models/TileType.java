@@ -22,7 +22,7 @@ public enum TileType {
   private static final Map<String, TileType> codeMap = new HashMap<>();
 
   static {
-    for (final TileType tile : TileType.values()) {
+    for (TileType tile : TileType.values()) {
       codeMap.put(tile.getCode(), tile);
     }
   }
@@ -41,11 +41,11 @@ public enum TileType {
    */
   private final boolean isValued;
 
-  TileType(final String code, final String name) {
+  TileType(String code, String name) {
     this(code, name, false);
   }
 
-  public static TileType fromCode(final String code) {
+  public static TileType fromCode(String code) {
     return codeMap.get(code);
   }
 }
