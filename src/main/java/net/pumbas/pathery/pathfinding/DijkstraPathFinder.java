@@ -10,6 +10,7 @@ import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import net.pumbas.pathery.exceptions.NoPathException;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
 import net.pumbas.pathery.models.TileType;
@@ -22,7 +23,7 @@ public class DijkstraPathFinder implements PathFinder {
       Set<Position> walls,
       Set<Position> startPositions,
       Set<Position> endPositions
-  ) {
+  ) throws NoPathException {
     Set<Position> visited = new HashSet<>();
     Queue<PathNode> queue = new PriorityQueue<>();
 
@@ -54,7 +55,9 @@ public class DijkstraPathFinder implements PathFinder {
       }
     }
 
-    return Collections.emptyList();
+    throw new NoPathException(String.format(
+        "There is no valid path between the start positions (%s) and the end positions (%s)",
+        startPositions, endPositions));
   }
 
   private List<Position> buildPath(PathNode endNode) {

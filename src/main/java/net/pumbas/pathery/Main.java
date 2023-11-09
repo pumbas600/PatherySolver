@@ -1,6 +1,7 @@
 package net.pumbas.pathery;
 
 import java.util.Set;
+import net.pumbas.pathery.exceptions.NoPathException;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
 import net.pumbas.pathery.models.TileType;
@@ -29,10 +30,14 @@ public class Main {
 
     PathFinder pathFinder = new DijkstraPathFinder();
 
-    System.out.println(
-        pathFinder.findPath(
-            map, walls, map.getStartTiles(), map.getCheckpoints()));
-  }
+    try {
+      System.out.println(
+          pathFinder.findPath(
+              map, walls, map.getStartTiles(), map.getCheckpoints()));
+    } catch (NoPathException e) {
+      System.out.println(e.getMessage());
+    }
 
+  }
 
 }
