@@ -3,6 +3,7 @@ package net.pumbas.pathery.pathfinding;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import net.pumbas.pathery.exceptions.NoPathException;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
@@ -27,13 +28,25 @@ public interface PathFinder {
     List<Position> completePath = new ArrayList<>();
     Set<Position> startPositions = map.getStartTiles();
 
-    for (Position checkpoint : map.getCheckpoints()) {
-      Set<Position> endPositions = Set.of(checkpoint);
-      completePath.addAll(this.findPath(map, walls, startPositions, endPositions));
+    List<Set<Position>> destinations = map.getCheckpoints()
+        .stream()
+        .map(Set::of)
+        .collect(Collectors.toList());
+    destinations.add(map.getFinishTiles());
+
+    for (Set<Position> endPositions : destinations) {
+      List<Position> path = this.findPath(map, walls, startPositions, endPositions);
+
+      if (!completePath.isEmpty()) {
+        // The first element is the last element of the previous path. We remove to prevent
+        // duplicate positions in the resulting path
+        path.remove(0);
+      }
+
+      completePath.addAll(path);
       startPositions = endPositions;
     }
 
-    completePath.addAll(this.findPath(map, walls, startPositions, map.getFinishTiles()));
     return completePath;
   }
 
