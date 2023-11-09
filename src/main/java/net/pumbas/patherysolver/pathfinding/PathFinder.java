@@ -8,15 +8,17 @@ import net.pumbas.patherysolver.models.Solution;
 
 public interface PathFinder {
 
+  int NO_PATH = -1;
+
   /**
    * Finds the shortest path between a starting tile and a finish tile for the given
-   * {@link Solution} and returns its length. If there is no valid path then {@code -1} is
+   * {@link Solution} and returns its length. If there is no valid path then {@link #NO_PATH} is
    * returned.
    *
    * @param solution       The {@link Solution} defining the walls on the map
    * @param startPositions The {@link Position}s a path can start from
    * @param endPositions   The {@link Position}s a path can end
-   * @return The length of the shortest path found, or {@code -1} if there is no valid path
+   * @return The length of the shortest path found, or {@link #NO_PATH} if there is no valid path
    */
   int getPathLength(Solution solution, List<Position> startPositions, List<Position> endPositions);
 
