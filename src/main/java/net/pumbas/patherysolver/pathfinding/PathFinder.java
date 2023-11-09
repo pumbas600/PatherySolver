@@ -20,13 +20,18 @@ public interface PathFinder {
   int getPathLength(Solution solution, List<Position> startPositions, List<Position> endPositions);
 
   @Getter
-  class PathNode extends Position {
+  class PathNode extends Position implements Comparable<PathNode> {
 
     private int pathLength;
 
     public PathNode(int x, int y, int pathLength) {
       super(x, y);
       this.pathLength = pathLength;
+    }
+
+    @Override
+    public int compareTo(PathNode pathNode) {
+      return Integer.compare(this.pathLength, pathNode.pathLength);
     }
 
   }
