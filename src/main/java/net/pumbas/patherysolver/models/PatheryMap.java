@@ -58,30 +58,29 @@ public class PatheryMap {
   /**
    * Checks if the given position is within the bounds of the map.
    *
-   * @param x The x coordinate
-   * @param y The y coordinate
+   * @param position The position to check
    * @return {@code true} if the position is within the bounds of the map, {@code false} otherwise
    */
-  public boolean isWithinBounds(int x, int y) {
-    return x >= 0 && x < this.width && y >= 0 && y < this.height;
+  public boolean isWithinBounds(Position position) {
+    return position.getX() >= 0 && position.getX() < this.width
+        && position.getY() >= 0 && position.getY() < this.height;
   }
 
   /**
    * Sets the {@link TileType} at the given position.
    *
-   * @param x        The x coordinate of the tile
-   * @param y        The y coordinate of the tile
+   * @param position The position of the tile
    * @param tileType The {@link TileType} to set
    * @throws IllegalArgumentException if the position is outside the bounds of the map
    */
-  public void setTile(int x, int y, TileType tileType) {
-    this.validateWithinBounds(x, y);
-    this.map[x][y] = tileType;
+  public void setTile(Position position, TileType tileType) {
+    this.validateWithinBounds(position);
+    this.map[position.getX()][position.getY()] = tileType;
 
     if (tileType == TileType.START) {
-      this.startTiles.add(new Position(x, y));
+      this.startTiles.add(position);
     } else if (tileType == TileType.FINISH) {
-      this.finishTiles.add(new Position(x, y));
+      this.finishTiles.add(position);
     }
   }
 
@@ -89,20 +88,19 @@ public class PatheryMap {
    * Gets the {@link TileType} at the given position. If there is no tile at the given position then
    * {@code null} is returned.
    *
-   * @param x The x coordinate of the tile
-   * @param y The y coordinate of the tile
+   * @param position The position of the tile
    * @return The {@link TileType} at the given position or {@code null} if there is no tile there
    * @throws IllegalArgumentException if the position is outside the bounds of the map
    */
-  public TileType getTile(int x, int y) {
-    this.validateWithinBounds(x, y);
-    return this.map[x][y];
+  public TileType getTile(Position position) {
+    this.validateWithinBounds(position);
+    return this.map[position.getX()][position.getY()];
   }
 
-  private void validateWithinBounds(int x, int y) {
-    if (!this.isWithinBounds(x, y)) {
+  private void validateWithinBounds(Position position) {
+    if (!this.isWithinBounds(position)) {
       throw new IllegalArgumentException(String.format(
-          "The given position (%d, %d) is not within the bounds of the map", x, y));
+          "The given position %s is not within the bounds of the map", position));
     }
   }
 

@@ -2,6 +2,7 @@ package net.pumbas.patherysolver.pathfinding;
 
 import java.util.List;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import net.pumbas.patherysolver.models.Position;
 import net.pumbas.patherysolver.models.Solution;
 
@@ -20,18 +21,24 @@ public interface PathFinder {
   int getPathLength(Solution solution, List<Position> startPositions, List<Position> endPositions);
 
   @Getter
-  class PathNode extends Position implements Comparable<PathNode> {
+  @RequiredArgsConstructor
+  class PathNode implements Comparable<PathNode> {
 
-    private int pathLength;
-
-    public PathNode(int x, int y, int pathLength) {
-      super(x, y);
-      this.pathLength = pathLength;
-    }
+    private final Position position;
+    private final int pathLength;
 
     @Override
     public int compareTo(PathNode pathNode) {
       return Integer.compare(this.pathLength, pathNode.pathLength);
+    }
+
+    public List<Position> getNeighbours() {
+      return List.of(
+          this.position.add(Position.UP),
+          this.position.add(Position.RIGHT),
+          this.position.add(Position.DOWN),
+          this.position.add(Position.LEFT)
+      );
     }
 
   }
