@@ -1,8 +1,8 @@
-package net.pumbas.patherysolver.pathfinding;
+package net.pumbas.pathery.pathfinding;
 
 import java.util.List;
 import java.util.Set;
-import net.pumbas.patherysolver.models.Position;
+import net.pumbas.pathery.models.Position;
 
 public interface PathFinder {
 

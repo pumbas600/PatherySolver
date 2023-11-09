@@ -1,4 +1,4 @@
-package net.pumbas.patherysolver.pathfinding;
+package net.pumbas.pathery.pathfinding;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,9 +10,9 @@ import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.pumbas.patherysolver.models.PatheryMap;
-import net.pumbas.patherysolver.models.Position;
-import net.pumbas.patherysolver.models.TileType;
+import net.pumbas.pathery.models.PatheryMap;
+import net.pumbas.pathery.models.Position;
+import net.pumbas.pathery.models.TileType;
 
 @RequiredArgsConstructor
 public class DijkstraPathFinder implements PathFinder {

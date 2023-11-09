@@ -1,4 +1,4 @@
-package net.pumbas.patherysolver.utils;
+package net.pumbas.pathery.utils;
 
 import java.lang.reflect.Array;
 

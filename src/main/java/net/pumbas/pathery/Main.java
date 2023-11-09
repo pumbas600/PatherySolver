@@ -1,11 +1,11 @@
-package net.pumbas.patherysolver;
+package net.pumbas.pathery;
 
 import java.util.Set;
-import net.pumbas.patherysolver.models.PatheryMap;
-import net.pumbas.patherysolver.models.Position;
-import net.pumbas.patherysolver.models.TileType;
-import net.pumbas.patherysolver.pathfinding.DijkstraPathFinder;
-import net.pumbas.patherysolver.pathfinding.PathFinder;
+import net.pumbas.pathery.models.PatheryMap;
+import net.pumbas.pathery.models.Position;
+import net.pumbas.pathery.models.TileType;
+import net.pumbas.pathery.pathfinding.DijkstraPathFinder;
+import net.pumbas.pathery.pathfinding.PathFinder;
 
 public class Main {
 

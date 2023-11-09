@@ -1,4 +1,4 @@
-package net.pumbas.patherysolver.models;
+package net.pumbas.pathery.models;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

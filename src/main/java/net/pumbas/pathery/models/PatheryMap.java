@@ -1,4 +1,4 @@
-package net.pumbas.patherysolver.models;
+package net.pumbas.pathery.models;
 
 import java.util.HashSet;
 import java.util.Set;
