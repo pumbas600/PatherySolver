@@ -23,14 +23,14 @@ public class Main {
 
     PatheryMap map = new PatheryMap(TileType.decode(codedMap), 6, Set.of(new Position(9, 2)));
     Set<Position> walls = Set.of(
-        new Position(1, 2), new Position(2, 3), new Position(2, 4),
-        new Position(3, 4), new Position(4, 4), new Position(5, 4)
+//        new Position(1, 2), new Position(2, 3), new Position(2, 4),
+//        new Position(3, 4), new Position(4, 4), new Position(5, 4)
     );
 
     PathFinder pathFinder = new DijkstraPathFinder(map);
 
     System.out.println(
-        pathFinder.getPathLength(
+        pathFinder.findPath(
             walls, map.getStartTiles(), map.getCheckpoints()));
   }
 

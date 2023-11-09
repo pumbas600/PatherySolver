@@ -1,10 +1,13 @@
 package net.pumbas.patherysolver.pathfinding;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.pumbas.patherysolver.models.PatheryMap;
@@ -17,7 +20,7 @@ public class DijkstraPathFinder implements PathFinder {
   private final PatheryMap map;
 
   @Override
-  public int getPathLength(
+  public List<Position> findPath(
       Set<Position> walls,
       Set<Position> startPositions,
       Set<Position> endPositions
@@ -33,10 +36,9 @@ public class DijkstraPathFinder implements PathFinder {
     while (!queue.isEmpty()) {
       PathNode pathNode = queue.poll();
       Position position = pathNode.getPosition();
-      int pathLength = pathNode.getPathLength();
 
       if (endPositions.contains(position)) {
-        return pathLength;
+        return this.buildPath(pathNode);
       }
 
       for (Position neighbour : pathNode.getNeighbours()) {
@@ -49,20 +51,35 @@ public class DijkstraPathFinder implements PathFinder {
           continue;
         }
 
-        queue.add(new PathNode(neighbour, pathLength + 1));
+        queue.add(new PathNode(neighbour, pathNode.getPathLength() + 1, pathNode));
         visited.add(neighbour);
       }
     }
 
-    return PathFinder.NO_PATH;
+    return Collections.emptyList();
+  }
+
+  private List<Position> buildPath(PathNode endNode) {
+    PathNode currentNode = endNode;
+    List<Position> path = new ArrayList<>();
+
+    while (currentNode != null) {
+      path.add(currentNode.getPosition());
+      currentNode = currentNode.getPrevNode();
+    }
+
+    Collections.reverse(path);
+    return path;
   }
 
   @Getter
+  @AllArgsConstructor
   @RequiredArgsConstructor
-  class PathNode implements Comparable<PathNode> {
+  private static class PathNode implements Comparable<PathNode> {
 
     private final Position position;
     private final int pathLength;
+    private PathNode prevNode;
 
     @Override
     public int compareTo(PathNode pathNode) {
