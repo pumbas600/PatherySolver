@@ -30,6 +30,25 @@ public class PatheryMap {
     this.height = this.width == 0 ? 0 : map[0].length;
     this.map = map;
     this.checkpoints = checkpoints;
+    this.findStartAndFinishTiles();
+  }
+
+  public PatheryMap(String[] codedMap, List<Position> checkpoints) {
+    this(TileType.decode(codedMap), checkpoints);
+  }
+
+  private void findStartAndFinishTiles() {
+    for (int x = 0; x < this.width; x++) {
+      for (int y = 0; y < this.height; y++) {
+        TileType tileType = this.map[x][y];
+
+        if (tileType == TileType.START) {
+          this.startTiles.add(new Position(x, y));
+        } else if (tileType == TileType.FINISH) {
+          this.finishTiles.add(new Position(x, y));
+        }
+      }
+    }
   }
 
   /**
