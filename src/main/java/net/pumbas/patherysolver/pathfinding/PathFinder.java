@@ -1,6 +1,7 @@
 package net.pumbas.patherysolver.pathfinding;
 
 import java.util.List;
+import java.util.Set;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.pumbas.patherysolver.models.Position;
@@ -20,7 +21,7 @@ public interface PathFinder {
    * @param endPositions   The {@link Position}s a path can end
    * @return The length of the shortest path found, or {@link #NO_PATH} if there is no valid path
    */
-  int getPathLength(Solution solution, List<Position> startPositions, List<Position> endPositions);
+  int getPathLength(Solution solution, Set<Position> startPositions, Set<Position> endPositions);
 
   @Getter
   @RequiredArgsConstructor

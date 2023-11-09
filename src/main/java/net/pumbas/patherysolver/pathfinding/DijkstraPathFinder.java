@@ -1,7 +1,6 @@
 package net.pumbas.patherysolver.pathfinding;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
@@ -19,8 +18,8 @@ public class DijkstraPathFinder implements PathFinder {
   @Override
   public int getPathLength(
       Solution solution,
-      List<Position> startPositions,
-      List<Position> endPositions
+      Set<Position> startPositions,
+      Set<Position> endPositions
   ) {
     Set<Position> visited = new HashSet<>();
     Queue<PathNode> queue = new PriorityQueue<>();
@@ -40,8 +39,14 @@ public class DijkstraPathFinder implements PathFinder {
       }
 
       for (Position neighbour : pathNode.getNeighbours()) {
+        if (!this.map.isWithinBounds(neighbour)) {
+          continue;
+        }
+
         TileType tileType = this.map.getTile(neighbour);
-        if (tileType.isBlocked() || visited.contains(position)) {
+        if (tileType.isBlocked()
+            || solution.getWallPositions().contains(neighbour)
+            || visited.contains(neighbour)) {
           continue;
         }
 
