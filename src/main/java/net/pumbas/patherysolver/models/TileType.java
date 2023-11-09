@@ -1,4 +1,4 @@
-package net.pumbas.models;
+package net.pumbas.patherysolver.models;
 
 import java.util.HashMap;
 import java.util.Map;

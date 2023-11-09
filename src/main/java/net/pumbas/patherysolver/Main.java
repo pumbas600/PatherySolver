@@ -1,4 +1,4 @@
-package net.pumbas;
+package net.pumbas.patherysolver;
 
 public class Main {
 
