@@ -1,5 +1,7 @@
 package net.pumbas.patherysolver.models;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 
 public class PatheryMap {
@@ -8,13 +10,26 @@ public class PatheryMap {
   private final int width;
   @Getter
   private final int height;
+  @Getter
+  private final List<Position> startTiles = new ArrayList<>();
+  @Getter
+  private final List<Position> finishTiles = new ArrayList<>();
 
   private final TileType[][] map;
+  private final List<Position> checkpoints;
 
-  public PatheryMap(final int width, final int height) {
+  public PatheryMap(final int width, final int height, final List<Position> checkpoints) {
     this.width = width;
     this.height = height;
     this.map = new TileType[width][height];
+    this.checkpoints = checkpoints;
+  }
+
+  public PatheryMap(final TileType[][] map, final List<Position> checkpoints) {
+    this.width = map.length;
+    this.height = this.width == 0 ? 0 : map[0].length;
+    this.map = map;
+    this.checkpoints = checkpoints;
   }
 
   /**
@@ -39,6 +54,12 @@ public class PatheryMap {
   public void setTile(final int x, final int y, final TileType tileType) {
     this.validateWithinBounds(x, y);
     this.map[x][y] = tileType;
+
+    if (tileType == TileType.START) {
+      this.startTiles.add(new Position(x, y));
+    } else if (tileType == TileType.FINISH) {
+      this.finishTiles.add(new Position(x, y));
+    }
   }
 
   /**
