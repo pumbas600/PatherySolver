@@ -1,9 +1,11 @@
 package net.pumbas.patherysolver.pathfinding;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.pumbas.patherysolver.models.PatheryMap;
 import net.pumbas.patherysolver.models.Position;
@@ -53,6 +55,29 @@ public class DijkstraPathFinder implements PathFinder {
     }
 
     return PathFinder.NO_PATH;
+  }
+
+  @Getter
+  @RequiredArgsConstructor
+  class PathNode implements Comparable<PathNode> {
+
+    private final Position position;
+    private final int pathLength;
+
+    @Override
+    public int compareTo(PathNode pathNode) {
+      return Integer.compare(this.pathLength, pathNode.pathLength);
+    }
+
+    public List<Position> getNeighbours() {
+      return List.of(
+          this.position.add(Position.UP),
+          this.position.add(Position.RIGHT),
+          this.position.add(Position.DOWN),
+          this.position.add(Position.LEFT)
+      );
+    }
+
   }
 
 }
