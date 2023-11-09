@@ -27,11 +27,11 @@ public class Main {
 //        new Position(3, 4), new Position(4, 4), new Position(5, 4)
     );
 
-    PathFinder pathFinder = new DijkstraPathFinder(map);
+    PathFinder pathFinder = new DijkstraPathFinder();
 
     System.out.println(
         pathFinder.findPath(
-            walls, map.getStartTiles(), map.getCheckpoints()));
+            map, walls, map.getStartTiles(), map.getCheckpoints()));
   }
 
 

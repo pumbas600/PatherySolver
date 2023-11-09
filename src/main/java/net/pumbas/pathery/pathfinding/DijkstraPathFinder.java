@@ -14,13 +14,11 @@ import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
 import net.pumbas.pathery.models.TileType;
 
-@RequiredArgsConstructor
 public class DijkstraPathFinder implements PathFinder {
-
-  private final PatheryMap map;
 
   @Override
   public List<Position> findPath(
+      PatheryMap map,
       Set<Position> walls,
       Set<Position> startPositions,
       Set<Position> endPositions
@@ -42,11 +40,11 @@ public class DijkstraPathFinder implements PathFinder {
       }
 
       for (Position neighbour : pathNode.getNeighbours()) {
-        if (!this.map.isWithinBounds(neighbour)) {
+        if (!map.isWithinBounds(neighbour)) {
           continue;
         }
 
-        TileType tileType = this.map.getTile(neighbour);
+        TileType tileType = map.getTile(neighbour);
         if (tileType.isBlocked() || walls.contains(neighbour) || visited.contains(neighbour)) {
           continue;
         }
