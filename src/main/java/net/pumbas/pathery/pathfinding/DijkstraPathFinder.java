@@ -1,13 +1,10 @@
 package net.pumbas.pathery.pathfinding;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.pumbas.pathery.exceptions.NoPathException;
@@ -17,6 +14,9 @@ import net.pumbas.pathery.models.TileType;
 
 public class DijkstraPathFinder implements PathFinder {
 
+  private static final int NOT_SEARCHED = 0;
+  private static final int START = 1;
+
   @Override
   public List<Position> findPath(
       PatheryMap map,
@@ -24,12 +24,14 @@ public class DijkstraPathFinder implements PathFinder {
       Set<Position> startPositions,
       Set<Position> endPositions
   ) throws NoPathException {
-    Set<Position> visited = new HashSet<>();
+
+    // This map is going to use 0 for not searched and 1 for the starting positions.
+    int[][] costMap = new int[map.getWidth()][map.getHeight()];
     Queue<PathNode> queue = new PriorityQueue<>();
 
     for (Position startPosition : startPositions) {
-      queue.add(new PathNode(startPosition, 0));
-      visited.add(startPosition);
+      queue.add(new PathNode(startPosition, 1));
+      costMap[startPosition.getX()][startPosition.getY()] = START;
     }
 
     while (!queue.isEmpty()) {
@@ -37,21 +39,24 @@ public class DijkstraPathFinder implements PathFinder {
       Position position = pathNode.getPosition();
 
       if (endPositions.contains(position)) {
-        return this.buildPath(pathNode);
+        return this.buildPath(map, startPositions, position, costMap);
       }
 
-      for (Position neighbour : pathNode.getNeighbours()) {
+      for (Position neighbour : position.getNeighbours()) {
         if (!map.isWithinBounds(neighbour)) {
           continue;
         }
 
         TileType tileType = map.getTile(neighbour);
-        if (tileType.isBlocked() || walls.contains(neighbour) || visited.contains(neighbour)) {
+        if (tileType.isBlocked()
+            || costMap[neighbour.getX()][neighbour.getY()] != NOT_SEARCHED
+            || walls.contains(neighbour)) {
           continue;
         }
 
-        queue.add(new PathNode(neighbour, pathNode.getPathLength() + 1, pathNode));
-        visited.add(neighbour);
+        int cost = pathNode.getPathLength() + 1;
+        queue.add(new PathNode(neighbour, cost));
+        costMap[neighbour.getX()][neighbour.getY()] = cost;
       }
     }
 
@@ -60,40 +65,78 @@ public class DijkstraPathFinder implements PathFinder {
         startPositions, endPositions));
   }
 
-  private List<Position> buildPath(PathNode endNode) {
-    PathNode currentNode = endNode;
+  private List<Position> buildPath(
+      PatheryMap map,
+      Set<Position> startPositions,
+      Position endPosition,
+      int[][] costMap
+  ) {
     List<Position> path = new ArrayList<>();
+    Position currentPosition = this.findPathStartPosition(
+        map, startPositions, endPosition, costMap);
 
-    while (currentNode != null) {
-      path.add(currentNode.getPosition());
-      currentNode = currentNode.getPrevNode();
+    while (true) {
+      int currentCost = costMap[currentPosition.getX()][currentPosition.getY()];
+      path.add(currentPosition);
+
+      if (currentPosition.equals(endPosition)) {
+        break;
+      }
+
+      currentPosition = this.findNeighbourWithCost(map, currentPosition, costMap, currentCost + 1);
     }
 
-    Collections.reverse(path);
     return path;
   }
 
+  private Position findPathStartPosition(
+      PatheryMap map,
+      Set<Position> startPositions,
+      Position endPosition,
+      int[][] costMap
+  ) {
+    if (startPositions.size() == 1) {
+      return startPositions.iterator().next();
+    }
+
+    // Work backwards until we find which of the start positions was the optimal starting point
+    Position currentPosition = endPosition;
+    while (true) {
+      final int currentCost = costMap[currentPosition.getX()][currentPosition.getY()];
+      if (currentCost == START) {
+        return currentPosition;
+      }
+
+      currentPosition = this.findNeighbourWithCost(map, currentPosition, costMap, currentCost - 1);
+    }
+  }
+
+  private Position findNeighbourWithCost(
+      PatheryMap map,
+      Position position,
+      int[][] costMap,
+      int cost
+  ) {
+    return position.getNeighbours()
+        .stream()
+        .filter(neighbour -> map.isWithinBounds(neighbour)
+            && costMap[neighbour.getX()][neighbour.getY()] == cost)
+        .findFirst()
+        .orElseThrow(
+            () -> new IllegalArgumentException(
+                String.format("There is no neighbour of %s with the cost of %s", position, cost)));
+  }
+
   @Getter
-  @AllArgsConstructor
   @RequiredArgsConstructor
   private static class PathNode implements Comparable<PathNode> {
 
     private final Position position;
     private final int pathLength;
-    private PathNode prevNode;
 
     @Override
     public int compareTo(PathNode pathNode) {
       return Integer.compare(this.pathLength, pathNode.pathLength);
-    }
-
-    public List<Position> getNeighbours() {
-      return List.of(
-          this.position.add(Position.UP),
-          this.position.add(Position.RIGHT),
-          this.position.add(Position.DOWN),
-          this.position.add(Position.LEFT)
-      );
     }
 
   }
