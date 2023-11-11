@@ -7,7 +7,7 @@ import net.pumbas.pathery.exceptions.NoPathException;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
 import net.pumbas.pathery.models.TileType;
-import net.pumbas.pathery.pathfinding.DijkstraPathFinder;
+import net.pumbas.pathery.pathfinding.BFSPathFinder;
 import net.pumbas.pathery.pathfinding.PathFinder;
 
 public class Main {
@@ -30,7 +30,7 @@ public class Main {
 //        new Position(3, 4), new Position(4, 4), new Position(5, 4)
     );
 
-    PathFinder pathFinder = new DijkstraPathFinder();
+    PathFinder pathFinder = new BFSPathFinder();
 
     try {
       System.out.println(
