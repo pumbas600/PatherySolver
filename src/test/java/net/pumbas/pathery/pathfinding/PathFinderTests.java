@@ -13,7 +13,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 public class PathFinderTests {
 
   private static List<PathFinder> getPathFinders() {
-    return List.of(new DijkstraPathFinder());
+    return List.of(new BFSPathFinder(), new DijkstraPathFinder());
   }
 
   @ParameterizedTest
