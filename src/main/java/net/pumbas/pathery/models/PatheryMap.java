@@ -3,6 +3,7 @@ package net.pumbas.pathery.models;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 import lombok.Getter;
 
 public class PatheryMap {
@@ -64,6 +65,34 @@ public class PatheryMap {
         && position.getY() >= 0 && position.getY() < this.height;
   }
 
+  private void validateWithinBounds(Position position) {
+    if (!this.isWithinBounds(position)) {
+      throw new IllegalArgumentException(String.format(
+          "The given position %s is not within the bounds of the map", position));
+    }
+  }
+
+  /**
+   * Gets a list of the adjacent {@link Position}s for the given position which are within the
+   * bounds of the map and are not blocked by a wall or a blocking {@link TileType}.
+   *
+   * @param position The position to get the neighbours for
+   * @param walls    The set of walls on the map
+   * @return A list of the adjacent {@link Position}s for the given position
+   */
+  public List<Position> getNeighbours(Position position, Set<Position> walls) {
+    return Stream.of(
+            // The ordering of these is important and match the ordering defined by the pathery rules.
+            position.add(Position.UP),
+            position.add(Position.RIGHT),
+            position.add(Position.DOWN),
+            position.add(Position.LEFT))
+        .filter(neighbour -> this.isWithinBounds(neighbour)
+            && !this.getTile(neighbour).isBlocked()
+            && !walls.contains(neighbour))
+        .toList();
+  }
+
   /**
    * Sets the {@link TileType} at the given position.
    *
@@ -93,13 +122,6 @@ public class PatheryMap {
   public TileType getTile(Position position) {
     this.validateWithinBounds(position);
     return this.map[position.getX()][position.getY()];
-  }
-
-  private void validateWithinBounds(Position position) {
-    if (!this.isWithinBounds(position)) {
-      throw new IllegalArgumentException(String.format(
-          "The given position %s is not within the bounds of the map", position));
-    }
   }
 
 }

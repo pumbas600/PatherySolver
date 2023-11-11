@@ -1,6 +1,5 @@
 package net.pumbas.pathery.models;
 
-import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -24,15 +23,6 @@ public class Position {
 
   public Position add(Position position) {
     return new Position(this.x + position.x, this.y + position.y);
-  }
-
-  public List<Position> getNeighbours() {
-    return List.of(
-        this.add(Position.UP),
-        this.add(Position.RIGHT),
-        this.add(Position.DOWN),
-        this.add(Position.LEFT)
-    );
   }
 
   @Override

@@ -25,6 +25,12 @@ public class BFSPathFinder implements PathFinder {
     Queue<Position> queue = new ArrayDeque<>();
 
     for (Position startPosition : startPositions) {
+      if (endPositions.contains(startPosition)) {
+        // This won't happen due to the way the PatheryMap is constructed, but is included for
+        // completeness. Note that an ArrayList is specifically returned so that its mutable.
+        return new ArrayList<>(List.of(startPosition));
+      }
+
       queue.add(startPosition);
       parents.put(startPosition, null);
     }
@@ -32,25 +38,14 @@ public class BFSPathFinder implements PathFinder {
     while (!queue.isEmpty()) {
       Position currentPosition = queue.poll();
 
-      if (endPositions.contains(currentPosition)) {
-        return this.buildPath(currentPosition, parents);
-      }
-
-      for (Position neighbour : currentPosition.getNeighbours()) {
-        if (!map.isWithinBounds(neighbour)) {
-          continue;
-        }
-
-        if (map.getTile(neighbour).isBlocked()
-            || parents.containsKey(neighbour)
-            || walls.contains(neighbour)) {
+      for (Position neighbour : map.getNeighbours(currentPosition, walls)) {
+        if (parents.containsKey(neighbour)) {
           continue;
         }
 
         parents.put(neighbour, currentPosition);
-
-        if (endPositions.contains(currentPosition)) {
-          return this.buildPath(currentPosition, parents);
+        if (endPositions.contains(neighbour)) {
+          return this.buildPath(neighbour, parents);
         } else {
           queue.add(neighbour);
         }

@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import net.pumbas.pathery.exceptions.NoPathException;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
-import net.pumbas.pathery.models.TileType;
 
 public class DijkstraPathFinder implements PathFinder {
 
@@ -39,18 +38,11 @@ public class DijkstraPathFinder implements PathFinder {
       Position position = pathNode.getPosition();
 
       if (endPositions.contains(position)) {
-        return this.buildPath(map, startPositions, position, costMap);
+        return this.buildPath(map, walls, startPositions, position, costMap);
       }
 
-      for (Position neighbour : position.getNeighbours()) {
-        if (!map.isWithinBounds(neighbour)) {
-          continue;
-        }
-
-        TileType tileType = map.getTile(neighbour);
-        if (tileType.isBlocked()
-            || costMap[neighbour.getX()][neighbour.getY()] != NOT_SEARCHED
-            || walls.contains(neighbour)) {
+      for (Position neighbour : map.getNeighbours(position, walls)) {
+        if (costMap[neighbour.getX()][neighbour.getY()] != NOT_SEARCHED) {
           continue;
         }
 
@@ -67,13 +59,14 @@ public class DijkstraPathFinder implements PathFinder {
 
   private List<Position> buildPath(
       PatheryMap map,
+      Set<Position> walls,
       Set<Position> startPositions,
       Position endPosition,
       int[][] costMap
   ) {
     List<Position> path = new ArrayList<>();
     Position currentPosition = this.findPathStartPosition(
-        map, startPositions, endPosition, costMap);
+        map, walls, startPositions, endPosition, costMap);
 
     while (true) {
       int currentCost = costMap[currentPosition.getX()][currentPosition.getY()];
@@ -83,7 +76,8 @@ public class DijkstraPathFinder implements PathFinder {
         break;
       }
 
-      currentPosition = this.findNeighbourWithCost(map, currentPosition, costMap, currentCost + 1);
+      currentPosition = this.findNeighbourWithCost(
+          map, walls, currentPosition, costMap, currentCost + 1);
     }
 
     return path;
@@ -91,6 +85,7 @@ public class DijkstraPathFinder implements PathFinder {
 
   private Position findPathStartPosition(
       PatheryMap map,
+      Set<Position> walls,
       Set<Position> startPositions,
       Position endPosition,
       int[][] costMap
@@ -107,20 +102,21 @@ public class DijkstraPathFinder implements PathFinder {
         return currentPosition;
       }
 
-      currentPosition = this.findNeighbourWithCost(map, currentPosition, costMap, currentCost - 1);
+      currentPosition = this.findNeighbourWithCost(
+          map, walls, currentPosition, costMap, currentCost - 1);
     }
   }
 
   private Position findNeighbourWithCost(
       PatheryMap map,
+      Set<Position> walls,
       Position position,
       int[][] costMap,
       int cost
   ) {
-    return position.getNeighbours()
+    return map.getNeighbours(position, walls)
         .stream()
-        .filter(neighbour -> map.isWithinBounds(neighbour)
-            && costMap[neighbour.getX()][neighbour.getY()] == cost)
+        .filter(neighbour -> costMap[neighbour.getX()][neighbour.getY()] == cost)
         .findFirst()
         .orElseThrow(
             () -> new IllegalArgumentException(
