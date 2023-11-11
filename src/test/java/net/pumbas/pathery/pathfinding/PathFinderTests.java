@@ -2,6 +2,7 @@ package net.pumbas.pathery.pathfinding;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import net.pumbas.pathery.exceptions.NoPathException;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
@@ -120,6 +121,36 @@ public class PathFinderTests {
         new Position(7, 4), new Position(7, 3), new Position(8, 3), new Position(9, 3),
         new Position(10, 3), new Position(10, 2), new Position(11, 2), new Position(11, 3),
         new Position(11, 4), new Position(12, 4));
+
+    Assertions.assertEquals(expectedPath, path);
+  }
+
+  @ParameterizedTest
+  @MethodSource("getPathFinders")
+  public void testComplexMapWith2WallsAndOneCheckpoint(PathFinder pathFinder)
+      throws NoPathException {
+    String[] codedMap = {
+        "rooooooooooor",
+        "rooooooooooor",
+        "roorooooorcor",
+        "rooooorooooor",
+        "rooooooooorof",
+        "sooorooooooor",
+    };
+
+    List<Position> checkpoints = List.of(new Position(10, 2));
+    PatheryMap map = new PatheryMap(codedMap, 6, checkpoints);
+    Set<Position> walls = Set.of(new Position(10, 3), new Position(11, 2));
+    List<Position> path = pathFinder.findCompletePath(map, walls);
+
+    List<Position> expectedPath = List.of(
+        new Position(0, 5), new Position(1, 5), new Position(1, 4), new Position(1, 3),
+        new Position(1, 2), new Position(1, 1), new Position(2, 1), new Position(3, 1),
+        new Position(4, 1), new Position(5, 1), new Position(6, 1), new Position(7, 1),
+        new Position(8, 1), new Position(9, 1), new Position(10, 1), new Position(10, 2),
+        new Position(10, 1), new Position(9, 1), new Position(8, 1), new Position(8, 2),
+        new Position(8, 3), new Position(9, 3), new Position(9, 4), new Position(9, 5),
+        new Position(10, 5), new Position(11, 5), new Position(11, 4), new Position(12, 4));
 
     Assertions.assertEquals(expectedPath, path);
   }
