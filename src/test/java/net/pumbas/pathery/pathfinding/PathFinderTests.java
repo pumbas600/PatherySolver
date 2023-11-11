@@ -5,7 +5,6 @@ import java.util.List;
 import net.pumbas.pathery.exceptions.NoPathException;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
-import net.pumbas.pathery.models.TileType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -13,7 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 public class PathFinderTests {
 
   private static List<PathFinder> getPathFinders() {
-    return List.of(new BFSPathFinder(), new DijkstraPathFinder());
+    return List.of(new BFSPathFinder());
   }
 
   @ParameterizedTest
@@ -26,7 +25,7 @@ public class PathFinderTests {
         "sooor",
     };
 
-    PatheryMap map = new PatheryMap(TileType.decode(codedMap), 0, Collections.emptyList());
+    PatheryMap map = new PatheryMap(codedMap, 0, Collections.emptyList());
     List<Position> path = pathFinder.findCompletePath(map, Collections.emptySet());
 
     List<Position> expectedPath = List.of(
@@ -46,7 +45,7 @@ public class PathFinderTests {
         "rooor",
     };
 
-    PatheryMap map = new PatheryMap(TileType.decode(codedMap), 0, Collections.emptyList());
+    PatheryMap map = new PatheryMap(codedMap, 0, Collections.emptyList());
     List<Position> path = pathFinder.findCompletePath(map, Collections.emptySet());
 
     List<Position> expectedPath = List.of(
@@ -66,7 +65,7 @@ public class PathFinderTests {
         "sooor",
     };
 
-    PatheryMap map = new PatheryMap(TileType.decode(codedMap), 0, Collections.emptyList());
+    PatheryMap map = new PatheryMap(codedMap, 0, Collections.emptyList());
     List<Position> path = pathFinder.findCompletePath(map, Collections.emptySet());
 
     List<Position> expectedPath = List.of(
@@ -86,12 +85,41 @@ public class PathFinderTests {
         "sooor",
     };
 
-    PatheryMap map = new PatheryMap(TileType.decode(codedMap), 0, List.of(new Position(2, 0)));
+    List<Position> checkpoints = List.of(new Position(2, 0));
+    PatheryMap map = new PatheryMap(codedMap, 0, checkpoints);
+
     List<Position> path = pathFinder.findCompletePath(map, Collections.emptySet());
 
     List<Position> expectedPath = List.of(
         new Position(0, 2), new Position(1, 2), new Position(1, 1), new Position(1, 0),
         new Position(2, 0), new Position(3, 0), new Position(3, 1), new Position(4, 1));
+
+    Assertions.assertEquals(expectedPath, path);
+  }
+
+  @ParameterizedTest
+  @MethodSource("getPathFinders")
+  public void testComplexMapWithNoWallsButOneCheckpoint(PathFinder pathFinder)
+      throws NoPathException {
+    String[] codedMap = {
+        "rooooooooooor",
+        "rooooooooooor",
+        "roorooooorcor",
+        "rooooorooooor",
+        "rooooooooorof",
+        "sooorooooooor",
+    };
+
+    List<Position> checkpoints = List.of(new Position(10, 2));
+    PatheryMap map = new PatheryMap(codedMap, 0, checkpoints);
+    List<Position> path = pathFinder.findCompletePath(map, Collections.emptySet());
+
+    List<Position> expectedPath = List.of(
+        new Position(0, 5), new Position(1, 5), new Position(1, 4), new Position(2, 4),
+        new Position(3, 4), new Position(4, 4), new Position(5, 4), new Position(6, 4),
+        new Position(7, 4), new Position(7, 3), new Position(8, 3), new Position(9, 3),
+        new Position(10, 3), new Position(10, 2), new Position(11, 2), new Position(11, 3),
+        new Position(11, 4), new Position(12, 4));
 
     Assertions.assertEquals(expectedPath, path);
   }

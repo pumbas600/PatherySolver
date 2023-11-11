@@ -40,6 +40,10 @@ public class PatheryMap {
     this.findStartAndFinishTiles();
   }
 
+  public PatheryMap(String[] codedMap, int maxWalls, List<Position> checkpoints) {
+    this(TileType.decode(codedMap), maxWalls, checkpoints);
+  }
+
   private void findStartAndFinishTiles() {
     for (int x = 0; x < this.width; x++) {
       for (int y = 0; y < this.height; y++) {
@@ -82,7 +86,7 @@ public class PatheryMap {
    */
   public List<Position> getNeighbours(Position position, Set<Position> walls) {
     return Stream.of(
-            // The ordering of these is important and match the ordering defined by the pathery rules.
+            // The ordering of these is important and is defined by the pathery rules.
             position.add(Position.UP),
             position.add(Position.RIGHT),
             position.add(Position.DOWN),
