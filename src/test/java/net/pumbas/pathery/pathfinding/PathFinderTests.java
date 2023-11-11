@@ -58,7 +58,28 @@ public class PathFinderTests {
 
   @ParameterizedTest
   @MethodSource("getPathFinders")
-  public void testWithNoWallsOrCheckpointsAndMultipleStart(PathFinder pathFinder)
+  public void testWithNoWallsButOneCheckpoint(PathFinder pathFinder)
+      throws NoPathException {
+    String[] codedMap = {
+        "rocor",
+        "rooof",
+        "sooor",
+    };
+
+    List<Position> checkpoints = List.of(new Position(2, 0));
+    PatheryMap map = new PatheryMap(codedMap, 0, checkpoints);
+    List<Position> path = pathFinder.findCompletePath(map, Collections.emptySet());
+
+    List<Position> expectedPath = List.of(
+        new Position(0, 2), new Position(1, 2), new Position(1, 1), new Position(1, 0),
+        new Position(2, 0), new Position(3, 0), new Position(3, 1), new Position(4, 1));
+
+    Assertions.assertEquals(expectedPath, path);
+  }
+
+  @ParameterizedTest
+  @MethodSource("getPathFinders")
+  public void testMultipleStartsWithNoWallsOrCheckpoints(PathFinder pathFinder)
       throws NoPathException {
     String[] codedMap = {
         "sooor",
@@ -78,22 +99,20 @@ public class PathFinderTests {
 
   @ParameterizedTest
   @MethodSource("getPathFinders")
-  public void testWithNoWallsButOneCheckpoint(PathFinder pathFinder)
+  public void testMultipleFinishesWithNoWallsOrCheckpoints(PathFinder pathFinder)
       throws NoPathException {
     String[] codedMap = {
-        "rocor",
         "rooof",
-        "sooor",
+        "sooof",
+        "rooof",
     };
 
-    List<Position> checkpoints = List.of(new Position(2, 0));
-    PatheryMap map = new PatheryMap(codedMap, 0, checkpoints);
-
+    PatheryMap map = new PatheryMap(codedMap, 0, Collections.emptyList());
     List<Position> path = pathFinder.findCompletePath(map, Collections.emptySet());
 
     List<Position> expectedPath = List.of(
-        new Position(0, 2), new Position(1, 2), new Position(1, 1), new Position(1, 0),
-        new Position(2, 0), new Position(3, 0), new Position(3, 1), new Position(4, 1));
+        new Position(0, 1), new Position(1, 1), new Position(2, 1), new Position(3, 1),
+        new Position(4, 1));
 
     Assertions.assertEquals(expectedPath, path);
   }
