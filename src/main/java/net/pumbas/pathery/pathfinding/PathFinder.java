@@ -38,8 +38,8 @@ public interface PathFinder {
       List<Position> path = this.findPath(map, walls, startPositions, endPositions);
 
       if (!completePath.isEmpty()) {
-        // The first element is the last element of the previous path. We remove to prevent
-        // duplicate positions in the resulting path
+        // The first element is the last element of the previous path. We remove it to
+        // prevent duplicate positions in the resulting path
         path.remove(0);
       }
 
