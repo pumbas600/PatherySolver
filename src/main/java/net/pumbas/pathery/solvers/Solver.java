@@ -1,8 +1,10 @@
+package net.pumbas.pathery.solvers;
+
 import net.pumbas.pathery.models.OptimalSolution;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
 
-public interface OptimalSolver {
+public interface Solver {
 
   /**
    * For a given {@link PatheryMap}, find the optimal placement of walls such that
