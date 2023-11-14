@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class OptimalSolution {
+
   private final int minPathLength;
   private final Set<Position> walls;
 }

@@ -60,14 +60,15 @@ public class PatheryMap {
 
   /**
    * Checks if the given x and y coordinates are within the bounds of the map.
-   * 
+   *
    * @param x The x coordinate
    * @param y The y coordinate
-   * @return {@code true} if the coordinates are within the bounds of the map, {@code false} otherwise
+   * @return {@code true} if the coordinates are within the bounds of the map, {@code false}
+   * otherwise
    */
   public boolean isWithinBounds(int x, int y) {
     return x >= 0 && x < this.width
-        && y >= 0 && y < this.height; 
+        && y >= 0 && y < this.height;
   }
 
   /**
@@ -129,7 +130,7 @@ public class PatheryMap {
   /**
    * Gets the {@link TileType} at the given coordinates. If there is no tile at the given position
    * then {@code null} is returned.
-   * 
+   *
    * @param x The x coordinate
    * @param y The y coordinate
    * @return The {@link TileType} at the given coordinates or {@code null} if there is no tile there
