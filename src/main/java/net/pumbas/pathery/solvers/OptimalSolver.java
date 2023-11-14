@@ -16,17 +16,17 @@ public class OptimalSolver implements Solver {
   public OptimalSolution findOptimalSolution(PatheryMap map) {
     // TODO: Handle case when getMaxWalls == 0
 
-    this.getAllWallPositionCombinations(map).forEach(System.out::println);
+    this.getAllWallCombinations(map).forEach(System.out::println);
 
     int currentWallIndex = 0;
 
     return null;
   }
 
-  protected Set<Set<Position>> getAllWallPositionCombinations(PatheryMap map) {
-    Set<Set<Position>> wallPositionCombinations = new HashSet<>();
-    Set<Set<Position>> temporaryNewWallPositionCombinations = new HashSet<>();
-    wallPositionCombinations.add(new HashSet<>());
+  protected Set<Set<Position>> getAllWallCombinations(PatheryMap map) {
+    Set<Set<Position>> wallCombinations = new HashSet<>();
+    Set<Set<Position>> temporaryNewWallCombinations = new HashSet<>();
+    wallCombinations.add(new HashSet<>());
 
     int totalPositions = map.getWidth() * map.getHeight();
 
@@ -40,25 +40,25 @@ public class OptimalSolver implements Solver {
 
       Position position = new Position(x, y);
 
-      for (Set<Position> wallPositions : wallPositionCombinations) {
-        if (wallPositions.size() == map.getMaxWalls()) {
+      for (Set<Position> walls : wallCombinations) {
+        if (walls.size() == map.getMaxWalls()) {
           continue;
         }
 
-        Set<Position> newWallPositions = new HashSet<>(wallPositions);
-        newWallPositions.add(position);
+        Set<Position> newWalls = new HashSet<>(walls);
+        newWalls.add(position);
 
         // Add it to the temporary set so that we don't start iterating over it in this for loop.
-        temporaryNewWallPositionCombinations.add(newWallPositions);
+        temporaryNewWallCombinations.add(newWalls);
       }
 
       // Now that we've finished iterating over wallPositionCombinations, we can add the new subsets
-      wallPositionCombinations.addAll(temporaryNewWallPositionCombinations);
-      temporaryNewWallPositionCombinations.clear();
+      wallCombinations.addAll(temporaryNewWallCombinations);
+      temporaryNewWallCombinations.clear();
     }
 
-    return wallPositionCombinations.stream()
-        .filter(wallPosition -> wallPosition.size() == map.getMaxWalls())
+    return wallCombinations.stream()
+        .filter(walls -> walls.size() == map.getMaxWalls())
         .collect(Collectors.toSet());
   }
 

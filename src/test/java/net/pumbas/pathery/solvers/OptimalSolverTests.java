@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 public class OptimalSolverTests {
 
   @Test
-  public void testAllWallPositionCombinationsAreGenerated() {
+  public void testAllWallCombinationsAreGenerated() {
     String[] codedMap = {
         "rrror",
         "rrrof",
@@ -20,7 +20,7 @@ public class OptimalSolverTests {
     PatheryMap map = new PatheryMap(codedMap, 2, Collections.emptyList());
     OptimalSolver solver = new OptimalSolver();
 
-    Set<Set<Position>> wallPositionCombinations = solver.getAllWallPositionCombinations(map);
+    Set<Set<Position>> wallPositionCombinations = solver.getAllWallCombinations(map);
     Set<Set<Position>> expectedWallPositionCombinations = Set.of(
         Set.of(new Position(3, 0), new Position(3, 1)),
         Set.of(new Position(3, 0), new Position(1, 2)),
