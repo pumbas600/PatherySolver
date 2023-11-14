@@ -32,7 +32,7 @@ public class OptimalSolver implements Solver {
 
     for (int positionIndex = 0; positionIndex < totalPositions; positionIndex++) {
       int x = positionIndex % map.getWidth();
-      int y = positionIndex / map.getHeight();
+      int y = positionIndex / map.getWidth();
 
       if (map.getTile(x, y) != TileType.OPEN) {
         continue;
@@ -78,7 +78,7 @@ public class OptimalSolver implements Solver {
     }
 
     private int getYPosition() {
-      return this.currentPosition / this.map.getHeight();
+      return this.currentPosition / this.map.getWidth();
     }
 
     private boolean isCurrentPositionValidWallLocation() {
