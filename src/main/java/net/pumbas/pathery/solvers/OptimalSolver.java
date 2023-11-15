@@ -21,13 +21,13 @@ public class OptimalSolver implements Solver {
   @Override
   public OptimalSolution findOptimalSolution(PatheryMap map) {
     Set<Position> bestWalls = null;
-    int minimumPathLength = Integer.MAX_VALUE;
+    int maximumPathLength = Integer.MIN_VALUE;
 
     for (Set<Position> walls : this.getAllWallCombinations(map)) {
       try {
         int pathLength = this.pathFinder.findCompletePath(map, walls).size();
-        if (pathLength < minimumPathLength) {
-          minimumPathLength = pathLength;
+        if (pathLength > maximumPathLength) {
+          maximumPathLength = pathLength;
           bestWalls = walls;
         }
       } catch (NoPathException e) {
@@ -41,7 +41,7 @@ public class OptimalSolver implements Solver {
               map.getMaxWalls()));
     }
 
-    return new OptimalSolution(minimumPathLength, bestWalls);
+    return new OptimalSolution(maximumPathLength, bestWalls);
   }
 
   protected Set<Set<Position>> getAllWallCombinations(PatheryMap map) {

@@ -1,7 +1,9 @@
 package net.pumbas.pathery.solvers;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
+import net.pumbas.pathery.models.OptimalSolution;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
 import org.junit.jupiter.api.Assertions;
@@ -38,5 +40,41 @@ public class OptimalSolverTests {
     );
 
     Assertions.assertEquals(expectedWallPositionCombinations, wallPositionCombinations);
+  }
+
+  @Test
+  public void testOptimalWallPositionIsFound() {
+    String[] codedMap = {
+        "rocor",
+        "rorof",
+        "sooor",
+    };
+
+    List<Position> checkpoints = List.of(new Position(2, 0));
+    PatheryMap map = new PatheryMap(codedMap, 1, checkpoints);
+
+    OptimalSolver solver = new OptimalSolver();
+    OptimalSolution optimalSolution = solver.findOptimalSolution(map);
+
+    Assertions.assertEquals(12, optimalSolution.getMaxPathLength());
+    Assertions.assertEquals(Set.of(new Position(3, 0)), optimalSolution.getWalls());
+  }
+
+  @Test
+  public void testOptimalWallPositionIsFoundAndFinishIsNotBlocked() {
+    String[] codedMap = {
+        "rocof",
+        "roror",
+        "sooor",
+    };
+
+    List<Position> checkpoints = List.of(new Position(2, 0));
+    PatheryMap map = new PatheryMap(codedMap, 1, checkpoints);
+
+    OptimalSolver solver = new OptimalSolver();
+    OptimalSolution optimalSolution = solver.findOptimalSolution(map);
+
+    Assertions.assertEquals(9, optimalSolution.getMaxPathLength());
+    Assertions.assertEquals(Set.of(new Position(1, 0)), optimalSolution.getWalls());
   }
 }
