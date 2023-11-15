@@ -5,25 +5,47 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import net.pumbas.pathery.exceptions.NoPathException;
+import net.pumbas.pathery.exceptions.NoSolutionException;
 import net.pumbas.pathery.models.OptimalSolution;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
 import net.pumbas.pathery.models.TileType;
+import net.pumbas.pathery.pathfinding.BFSPathFinder;
+import net.pumbas.pathery.pathfinding.PathFinder;
 
 public class OptimalSolver implements Solver {
 
+  private final PathFinder pathFinder = new BFSPathFinder();
+
   @Override
   public OptimalSolution findOptimalSolution(PatheryMap map) {
-    // TODO: Handle case when getMaxWalls == 0
+    Set<Position> bestWalls = null;
+    int minimumPathLength = Integer.MAX_VALUE;
 
-    this.getAllWallCombinations(map).forEach(System.out::println);
+    for (Set<Position> walls : this.getAllWallCombinations(map)) {
+      try {
+        int pathLength = this.pathFinder.findCompletePath(map, walls).size();
+        if (pathLength < minimumPathLength) {
+          minimumPathLength = pathLength;
+          bestWalls = walls;
+        }
+      } catch (NoPathException e) {
+        // This wall combination is invalid
+      }
+    }
 
-    int currentWallIndex = 0;
+    if (bestWalls == null) {
+      throw new NoSolutionException(
+          "There is no valid solution for this map using all %d walls".formatted(
+              map.getMaxWalls()));
+    }
 
-    return null;
+    return new OptimalSolution(minimumPathLength, bestWalls);
   }
 
   protected Set<Set<Position>> getAllWallCombinations(PatheryMap map) {
+    // TODO: Handle case when getMaxWalls == 0
     Set<Set<Position>> wallCombinations = new HashSet<>();
     Set<Set<Position>> temporaryNewWallCombinations = new HashSet<>();
     wallCombinations.add(new HashSet<>());
