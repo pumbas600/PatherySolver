@@ -1,44 +1,33 @@
 package net.pumbas.pathery;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import net.pumbas.pathery.exceptions.NoPathException;
+import net.pumbas.pathery.models.OptimalSolution;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
 import net.pumbas.pathery.models.TileType;
-import net.pumbas.pathery.pathfinding.BFSPathFinder;
-import net.pumbas.pathery.pathfinding.PathFinder;
+import net.pumbas.pathery.solvers.OptimalSolver;
+import net.pumbas.pathery.solvers.Solver;
 
 public class Main {
 
   public static void main(String[] args) {
-    System.out.println("Hello world!");
-
     String[] codedMap = new String[]{
-        "rororooooooor",
-        "rorooroooooof",
-        "roooooooocror",
         "sooooooooooor",
+        "roooooooorror",
+        "roocoooooooof",
+        "rooroooooooor",
         "rooooooooooor",
-        "roooooooooror"
+        "rooooooooroor"
     };
 
-    PatheryMap map = new PatheryMap(TileType.decode(codedMap), 6, List.of(new Position(9, 2)));
-    Set<Position> walls = Set.of(
-//        new Position(1, 2), new Position(2, 3), new Position(2, 4),
-//        new Position(3, 4), new Position(4, 4), new Position(5, 4)
-    );
+    List<Position> checkpoints = List.of(new Position(3, 2));
+    PatheryMap map = new PatheryMap(TileType.decode(codedMap), 7, checkpoints);
 
-    PathFinder pathFinder = new BFSPathFinder();
+    Solver solver = new OptimalSolver();
+    OptimalSolution solution = solver.findOptimalSolution(map);
 
-    try {
-      System.out.println(
-          pathFinder.findPath(
-              map, walls, map.getStartTiles(), new HashSet<>(map.getCheckpoints())));
-    } catch (NoPathException e) {
-      System.out.println(e.getMessage());
-    }
+    System.out.println(solution);
+
 
   }
 

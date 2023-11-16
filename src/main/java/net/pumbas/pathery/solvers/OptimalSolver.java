@@ -3,7 +3,7 @@ package net.pumbas.pathery.solvers;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.stream.Collectors;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.pumbas.pathery.exceptions.NoPathException;
 import net.pumbas.pathery.exceptions.NoSolutionException;
@@ -18,34 +18,16 @@ public class OptimalSolver implements Solver {
 
   private final PathFinder pathFinder = new BFSPathFinder();
 
+  @Getter
+  private long prunedCount;
+  @Getter
+  private long exploredCount;
+
   @Override
   public OptimalSolution findOptimalSolution(PatheryMap map) {
     Set<Position> bestWalls = null;
     int maximumPathLength = Integer.MIN_VALUE;
 
-    for (Set<Position> walls : this.getAllWallCombinations(map)) {
-      try {
-        int pathLength = this.pathFinder.findCompletePath(map, walls).size();
-        if (pathLength > maximumPathLength) {
-          maximumPathLength = pathLength;
-          bestWalls = walls;
-        }
-      } catch (NoPathException e) {
-        // This wall combination is invalid
-      }
-    }
-
-    if (bestWalls == null) {
-      throw new NoSolutionException(
-          "There is no valid solution for this map using all %d walls".formatted(
-              map.getMaxWalls()));
-    }
-
-    return new OptimalSolution(maximumPathLength, bestWalls);
-  }
-
-  protected Set<Set<Position>> getAllWallCombinations(PatheryMap map) {
-    // TODO: Handle case when getMaxWalls == 0
     Set<Set<Position>> wallCombinations = new HashSet<>();
     Set<Set<Position>> temporaryNewWallCombinations = new HashSet<>();
     wallCombinations.add(new HashSet<>());
@@ -63,15 +45,25 @@ public class OptimalSolver implements Solver {
       Position position = new Position(x, y);
 
       for (Set<Position> walls : wallCombinations) {
-        if (walls.size() == map.getMaxWalls()) {
-          continue;
-        }
-
         Set<Position> newWalls = new HashSet<>(walls);
         newWalls.add(position);
 
-        // Add it to the temporary set so that we don't start iterating over it in this for loop.
-        temporaryNewWallCombinations.add(newWalls);
+        try {
+          this.exploredCount++;
+          int pathLength = this.pathFinder.findCompletePath(map, newWalls).size();
+          if (pathLength > maximumPathLength) {
+            maximumPathLength = pathLength;
+            bestWalls = newWalls;
+          }
+        } catch (NoPathException e) {
+          this.prunedCount++;
+          continue;
+        }
+
+        if (newWalls.size() < map.getMaxWalls()) {
+          // Add it to the temporary set so that we don't start iterating over it in this for loop.
+          temporaryNewWallCombinations.add(newWalls);
+        }
       }
 
       // Now that we've finished iterating over wallPositionCombinations, we can add the new subsets
@@ -79,9 +71,13 @@ public class OptimalSolver implements Solver {
       temporaryNewWallCombinations.clear();
     }
 
-    return wallCombinations.stream()
-        .filter(walls -> walls.size() == map.getMaxWalls())
-        .collect(Collectors.toSet());
+    if (bestWalls == null) {
+      throw new NoSolutionException(
+          "There is no valid solution for this map using all %d walls".formatted(
+              map.getMaxWalls()));
+    }
+
+    return new OptimalSolution(maximumPathLength, bestWalls);
   }
 
   /**
