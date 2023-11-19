@@ -7,17 +7,18 @@ import net.pumbas.pathery.exceptions.NoPathException;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 public class PathFinderTests {
 
-  private static List<PathFinder> getPathFinders() {
+  private static List<PathFinder> getPatheryEquivalentPathFinderTests() {
     return List.of(new BFSPathFinder());
   }
 
   @ParameterizedTest
-  @MethodSource("getPathFinders")
+  @MethodSource("getPatheryEquivalentPathFinderTests")
   public void testWithNoWallsOrCheckpointsAndOneStartAndFinish(PathFinder pathFinder)
       throws NoPathException {
     String[] codedMap = {
@@ -37,7 +38,7 @@ public class PathFinderTests {
   }
 
   @ParameterizedTest
-  @MethodSource("getPathFinders")
+  @MethodSource("getPatheryEquivalentPathFinderTests")
   public void testPriorityWithNoWallsOrCheckpointsAndOneStartAndFinish(PathFinder pathFinder)
       throws NoPathException {
     String[] codedMap = {
@@ -57,7 +58,7 @@ public class PathFinderTests {
   }
 
   @ParameterizedTest
-  @MethodSource("getPathFinders")
+  @MethodSource("getPatheryEquivalentPathFinderTests")
   public void testWithNoWallsButOneCheckpoint(PathFinder pathFinder)
       throws NoPathException {
     String[] codedMap = {
@@ -78,7 +79,7 @@ public class PathFinderTests {
   }
 
   @ParameterizedTest
-  @MethodSource("getPathFinders")
+  @MethodSource("getPatheryEquivalentPathFinderTests")
   public void testMultipleStartsWithNoWallsOrCheckpoints(PathFinder pathFinder)
       throws NoPathException {
     String[] codedMap = {
@@ -98,7 +99,7 @@ public class PathFinderTests {
   }
 
   @ParameterizedTest
-  @MethodSource("getPathFinders")
+  @MethodSource("getPatheryEquivalentPathFinderTests")
   public void testMultipleFinishesWithNoWallsOrCheckpoints(PathFinder pathFinder)
       throws NoPathException {
     String[] codedMap = {
@@ -118,7 +119,7 @@ public class PathFinderTests {
   }
 
   @ParameterizedTest
-  @MethodSource("getPathFinders")
+  @MethodSource("getPatheryEquivalentPathFinderTests")
   public void testComplexMapWithNoWallsButOneCheckpoint(PathFinder pathFinder)
       throws NoPathException {
     String[] codedMap = {
@@ -145,7 +146,7 @@ public class PathFinderTests {
   }
 
   @ParameterizedTest
-  @MethodSource("getPathFinders")
+  @MethodSource("getPatheryEquivalentPathFinderTests")
   public void testComplexMapWith2WallsAndOneCheckpoint(PathFinder pathFinder)
       throws NoPathException {
     String[] codedMap = {
@@ -172,6 +173,27 @@ public class PathFinderTests {
         new Position(10, 5), new Position(11, 5), new Position(11, 4), new Position(12, 4));
 
     Assertions.assertEquals(expectedPath, path);
+  }
+
+  @Test
+  public void testShortestPathFoundForComplexMapWith2WallsAndOneCheckpoint()
+      throws NoPathException {
+    PathFinder pathFinder = new AStarPathFinder();
+    String[] codedMap = {
+        "rooooooooooor",
+        "rooooooooooor",
+        "roorooooorcor",
+        "rooooorooooor",
+        "rooooooooorof",
+        "sooorooooooor",
+    };
+
+    List<Position> checkpoints = List.of(new Position(10, 2));
+    PatheryMap map = new PatheryMap(codedMap, 6, checkpoints);
+    Set<Position> walls = Set.of(new Position(10, 3), new Position(11, 2));
+    List<Position> path = pathFinder.findCompletePath(map, walls);
+
+    Assertions.assertEquals(28, path.size());
   }
 
 }
