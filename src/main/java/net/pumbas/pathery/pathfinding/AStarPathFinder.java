@@ -1,6 +1,11 @@
 package net.pumbas.pathery.pathfinding;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,7 +22,58 @@ public class AStarPathFinder implements PathFinder {
       Set<Position> startPositions,
       Set<Position> endPositions
   ) throws NoPathException {
-    throw new NoPathException("To be implemented");
+    Set<Position> closedSet = new HashSet<>();
+    Queue<Node> queue = new PriorityQueue<>();
+
+    for (Position startPosition : startPositions) {
+      if (endPositions.contains(startPosition)) {
+        // This won't happen due to the way the PatheryMap is constructed, but is included for
+        // completeness. Note that an ArrayList is specifically returned so that its mutable.
+        return List.of(startPosition);
+      }
+
+      int heuristicCost = this.calculateHeuristicCost(startPosition, endPositions);
+      queue.add(new Node(startPosition, heuristicCost, 0));
+      closedSet.add(startPosition);
+    }
+
+    while (!queue.isEmpty()) {
+      Node currentNode = queue.poll();
+      int minPathCost = currentNode.getMinPathCost() + 1;
+
+      for (Position neighbour : map.getNeighbours(currentNode.getPosition(), walls)) {
+        if (closedSet.contains(neighbour)) {
+          continue;
+        }
+
+        int heuristicCost = this.calculateHeuristicCost(neighbour, endPositions);
+        Node neighbourNode = new Node(neighbour, currentNode, heuristicCost, minPathCost);
+
+        if (endPositions.contains(neighbour)) {
+          return this.buildPath(neighbourNode);
+        } else {
+          queue.add(neighbourNode);
+          closedSet.add(neighbour);
+        }
+      }
+    }
+
+    throw new NoPathException(
+        "There is no valid path between the start positions (%s) and the end positions (%s)"
+            .formatted(startPositions, endPositions));
+  }
+
+  private List<Position> buildPath(Node endNode) {
+    Node currentNode = endNode;
+    List<Position> path = new ArrayList<>();
+
+    while (currentNode != null) {
+      path.add(currentNode.getPosition());
+      currentNode = currentNode.getParent();
+    }
+
+    Collections.reverse(path);
+    return path;
   }
 
   private int calculateHeuristicCost(Position from, Set<Position> endPositions) {
@@ -49,8 +105,13 @@ public class AStarPathFinder implements PathFinder {
   private static class Node implements Comparable<Node> {
 
     private final Position position;
+    private final Node parent;
     private final int heuristicCost;
     private final int minPathCost;
+
+    public Node(Position position, int heuristicCost, int minPathCost) {
+      this(position, null, heuristicCost, minPathCost);
+    }
 
     public int getCost() {
       return this.heuristicCost + this.minPathCost;
