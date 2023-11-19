@@ -11,12 +11,10 @@ import net.pumbas.pathery.models.OptimalSolution;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
 import net.pumbas.pathery.models.TileType;
-import net.pumbas.pathery.pathfinding.BFSPathFinder;
 import net.pumbas.pathery.pathfinding.PathFinder;
+import net.pumbas.pathery.pathfinding.PathFinderFactory;
 
 public class OptimalSolver implements Solver {
-
-  private final PathFinder pathFinder = new BFSPathFinder();
 
   @Getter
   private long prunedCount;
@@ -25,6 +23,7 @@ public class OptimalSolver implements Solver {
 
   @Override
   public OptimalSolution findOptimalSolution(PatheryMap map) {
+    PathFinder pathFinder = PathFinderFactory.getPathFinder(map);
     Set<Position> bestWalls = null;
     int maximumPathLength = Integer.MIN_VALUE;
 
@@ -50,7 +49,7 @@ public class OptimalSolver implements Solver {
 
         try {
           this.exploredCount++;
-          int pathLength = this.pathFinder.findCompletePath(map, newWalls).size();
+          int pathLength = pathFinder.findCompletePath(map, newWalls).size();
           if (pathLength > maximumPathLength) {
             maximumPathLength = pathLength;
             bestWalls = newWalls;
