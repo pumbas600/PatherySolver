@@ -51,6 +51,8 @@ public class ParallelOptimalSolver implements Solver {
           () -> this.exploreWallCombinations(map, wallCombinations, pathFinder, position));
     }
 
+    executorService.shutdown();
+
     if (this.bestWalls == null) {
       throw new NoSolutionException(
           "There is no valid solution for this map using all %d walls".formatted(
