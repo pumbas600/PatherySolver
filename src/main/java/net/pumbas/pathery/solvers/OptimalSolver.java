@@ -12,21 +12,21 @@ import net.pumbas.pathery.models.TileType;
 import net.pumbas.pathery.pathfinding.PathFinder;
 import net.pumbas.pathery.pathfinding.PathFinderFactory;
 
+@Getter
 public class OptimalSolver implements Solver {
 
-  @Getter
   private long prunedCount;
-  @Getter
   private long exploredCount;
+  private int currentMinimumPathLength;
+  private Set<Position> bestWalls;
 
   @Override
   public OptimalSolution findOptimalSolution(PatheryMap map) {
     PathFinder pathFinder = PathFinderFactory.getPathFinder(map);
-    Set<Position> bestWalls = null;
-    int maximumPathLength = Integer.MIN_VALUE;
+    this.bestWalls = null;
+    this.currentMinimumPathLength = Integer.MIN_VALUE;
 
     Set<Set<Position>> wallCombinations = new HashSet<>();
-    Set<Set<Position>> temporaryNewWallCombinations = new HashSet<>();
     wallCombinations.add(new HashSet<>());
 
     int totalPositions = map.getWidth() * map.getHeight();
@@ -40,40 +40,48 @@ public class OptimalSolver implements Solver {
       }
 
       Position position = new Position(x, y);
-
-      for (Set<Position> walls : wallCombinations) {
-        Set<Position> newWalls = new HashSet<>(walls);
-        newWalls.add(position);
-
-        try {
-          this.exploredCount++;
-          int pathLength = pathFinder.findCompletePath(map, newWalls).size();
-          if (pathLength > maximumPathLength) {
-            maximumPathLength = pathLength;
-            bestWalls = newWalls;
-          }
-        } catch (NoPathException e) {
-          this.prunedCount++;
-          continue;
-        }
-
-        if (newWalls.size() < map.getMaxWalls()) {
-          // Add it to the temporary set so that we don't start iterating over it in this for loop.
-          temporaryNewWallCombinations.add(newWalls);
-        }
-      }
-
-      // Now that we've finished iterating over wallPositionCombinations, we can add the new subsets
-      wallCombinations.addAll(temporaryNewWallCombinations);
-      temporaryNewWallCombinations.clear();
+      this.exploreWallCombinations(map, wallCombinations, pathFinder, position);
     }
 
-    if (bestWalls == null) {
+    if (this.bestWalls == null) {
       throw new NoSolutionException(
           "There is no valid solution for this map using all %d walls".formatted(
               map.getMaxWalls()));
     }
 
-    return new OptimalSolution(maximumPathLength, bestWalls);
+    return new OptimalSolution(this.currentMinimumPathLength, this.bestWalls);
+  }
+
+  private void exploreWallCombinations(
+      PatheryMap map,
+      Set<Set<Position>> wallCombinations,
+      PathFinder pathFinder,
+      Position position
+  ) {
+    Set<Set<Position>> newWallCombinations = new HashSet<>();
+
+    for (Set<Position> walls : wallCombinations) {
+      Set<Position> newWalls = new HashSet<>(walls);
+      newWalls.add(position);
+
+      try {
+        this.exploredCount++;
+        int pathLength = pathFinder.findCompletePath(map, newWalls).size();
+        if (pathLength > this.currentMinimumPathLength) {
+          this.currentMinimumPathLength = pathLength;
+          this.bestWalls = newWalls;
+        }
+      } catch (NoPathException e) {
+        this.prunedCount++;
+        continue;
+      }
+
+      if (newWalls.size() < map.getMaxWalls()) {
+        // Add it to the new set so that we don't start iterating over it in this for loop.
+        newWallCombinations.add(newWalls);
+      }
+    }
+
+    wallCombinations.addAll(newWallCombinations);
   }
 }

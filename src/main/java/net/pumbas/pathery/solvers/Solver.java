@@ -30,4 +30,12 @@ public interface Solver {
    * @return The number of wall combinations that have been explored
    */
   long getExploredCount();
+
+  /**
+   * Returns the current minimum path length that has been found so far from all the wall
+   * combinations that have been explored so far.
+   *
+   * @return The current minimum path length that has been found
+   */
+  int getCurrentMinimumPathLength();
 }
