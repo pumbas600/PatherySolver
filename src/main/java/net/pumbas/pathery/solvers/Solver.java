@@ -32,10 +32,10 @@ public interface Solver {
   long getExploredCount();
 
   /**
-   * Returns the current minimum path length that has been found so far from all the wall
+   * Returns the current longest path length that has been found so far from all the wall
    * combinations that have been explored so far.
    *
-   * @return The current minimum path length that has been found
+   * @return The current longest path length that has been found
    */
-  int getCurrentMinimumPathLength();
+  int getCurrentLongestPathLength();
 }
