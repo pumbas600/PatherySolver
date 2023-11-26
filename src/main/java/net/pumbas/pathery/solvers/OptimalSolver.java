@@ -26,6 +26,8 @@ public class OptimalSolver implements Solver {
   public OptimalSolution findOptimalSolution(PatheryMap map) {
     PathFinder pathFinder = PathFinderFactory.getPathFinder(map);
     this.bestWalls = null;
+    this.prunedCount = 0;
+    this.exploredCount = 0;
     this.currentLongestPathLength = Integer.MIN_VALUE;
 
     Set<Set<Position>> wallCombinations = new HashSet<>();
