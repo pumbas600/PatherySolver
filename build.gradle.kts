@@ -3,7 +3,7 @@ plugins {
     id("io.freefair.lombok") version "8.4"
 }
 
-group = "org.example"
+group = "net.pumbas"
 version = "1.0-SNAPSHOT"
 
 repositories {
