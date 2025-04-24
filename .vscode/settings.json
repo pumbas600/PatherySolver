@@ -4,5 +4,13 @@
 	"[java]": {
 		"editor.tabSize": 2,
 		"editor.detectIndentation": false
-	}
+	},
+	"java.configuration.updateBuildConfiguration": "automatic",
+	"java.test.config": {
+		"name": "Gradle",
+		"workingDirectory": "${workspaceFolder}",
+		"buildTool": "gradle"
+	},
+	"java.test.defaultConfig": "Gradle",
+	"java.debug.settings.onBuildFailureProceed": true
 }

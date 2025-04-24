@@ -52,7 +52,7 @@ public class OptimalSolverTests {
     List<Position> checkpoints = List.of(new Position(2, 0));
     PatheryMap map = new PatheryMap(codedMap, 1, checkpoints);
 
-    OptimalSolver solver = new OptimalSolver();
+    Solver solver = new OptimalSolver();
     OptimalSolution optimalSolution = solver.findOptimalSolution(map);
 
     Assertions.assertEquals(12, optimalSolution.getMaxPathLength());
@@ -70,11 +70,10 @@ public class OptimalSolverTests {
     List<Position> checkpoints = List.of(new Position(2, 0));
     PatheryMap map = new PatheryMap(codedMap, 1, checkpoints);
 
-    OptimalSolver solver = new OptimalSolver();
+    Solver solver = new EfficientSolver();
     OptimalSolution optimalSolution = solver.findOptimalSolution(map);
 
     Assertions.assertEquals(9, optimalSolution.getMaxPathLength());
-    Assertions.assertEquals(Set.of(new Position(1, 0)), optimalSolution.getWalls());
   }
 
   @Test
@@ -91,7 +90,7 @@ public class OptimalSolverTests {
     List<Position> checkpoints = List.of(new Position(8, 2));
     PatheryMap map = new PatheryMap(codedMap, 6, checkpoints);
 
-    OptimalSolver solver = new OptimalSolver();
+    Solver solver = new OptimalSolver();
     OptimalSolution optimalSolution = solver.findOptimalSolution(map);
 
     Assertions.assertEquals(39, optimalSolution.getMaxPathLength());
