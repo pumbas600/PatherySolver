@@ -13,16 +13,19 @@ public class Main {
     
     final long startTime = System.currentTimeMillis();
     final String[] codedMap = new String[]{
-        "rooooooooooor",
-        "rooooooooocof",
-        "roooooooooror",
-        "rorooooooooor",
-        "roororrrrooor",
-        "sooooorooooor"
+        "rooooooooorooooof",
+        "rooooooocooooooof",
+        "roooororrooooooof",
+        "roooooooooooooorf",
+        "rorooooooroooooof",
+        "rooooooooooooooof",
+        "rooooorooooooooof",
+        "sorooorooroooooof",
+        "rooorooooooooooof",
     };
 
-    final List<Position> checkpoints = List.of(new Position(10, 1));
-    final PatheryMap map = new PatheryMap(codedMap, 8, checkpoints);
+    final List<Position> checkpoints = List.of(new Position(8, 1));
+    final PatheryMap map = new PatheryMap(codedMap, 13, checkpoints);
 
     final Solver solver = new EfficientSolver();
     final OptimalSolution solution = solver.findOptimalSolution(map);
@@ -30,7 +33,7 @@ public class Main {
 
     System.out.println("Execution time: " + (endTime - startTime) + "ms");
 
-    // Best move count should be 32.
+    // Normal Map 25/04/25 - Best move count should be 87.
     System.out.println(solution);
 
 
