@@ -37,7 +37,12 @@ public enum TileType {
   }
 
   public static TileType fromCode(char code) {
-    return codeMap.get(code);
+    final TileType type = codeMap.get(code);
+    if (type == null) {
+      throw new IllegalArgumentException("Invalid tile code: " + code);
+    }
+
+    return type;
   }
 
   /**
