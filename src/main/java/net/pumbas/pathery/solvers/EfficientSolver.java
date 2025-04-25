@@ -13,6 +13,7 @@ import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
 import net.pumbas.pathery.models.TileType;
 import net.pumbas.pathery.models.WallCombination;
+import net.pumbas.pathery.models.SetWallCombination;
 import net.pumbas.pathery.pathfinding.PathFinder;
 import net.pumbas.pathery.pathfinding.PathFinderFactory;
 
@@ -43,11 +44,10 @@ public class EfficientSolver implements Solver {
     this.exploredCount = 0;
     this.currentLongestPathLength = Integer.MIN_VALUE;
 
-    final Set<String> exploredWallCombinationIds = new HashSet<>();
     final List<WallCombination> openWallCombinations = new ArrayList<>();
-    final List<WallCombination> newWallCombinations = new ArrayList<>();
+    final Set<WallCombination> newWallCombinations = new HashSet<>();
     
-    openWallCombinations.add(WallCombination.EMPTY);
+    openWallCombinations.add(SetWallCombination.EMPTY);
 
     while (!openWallCombinations.isEmpty()) {
       for (final WallCombination wallCombination : openWallCombinations) {
@@ -68,12 +68,8 @@ public class EfficientSolver implements Solver {
                 continue;
               }
 
-              final WallCombination newWallCombination = wallCombination.add(position);
-
-              if (!exploredWallCombinationIds.contains(newWallCombination.getUniqueId())) {
-                exploredWallCombinationIds.add(newWallCombination.getUniqueId());
-                newWallCombinations.add(newWallCombination);
-              } else {
+              final WallCombination newWallCombination = wallCombination.add(position, map);
+              if (!newWallCombinations.add(newWallCombination)) {
                 this.prunedCount++;
               }
             }
@@ -91,12 +87,10 @@ public class EfficientSolver implements Solver {
       );
       openWallCombinations.clear();
       openWallCombinations.addAll(newWallCombinations);
-      newWallCombinations.clear();
 
-      // All the wall combinations in the open set are the same size, which means we can clear the
-      // explored set because we will never need to check if we've explored a combination with fewer
-      // walls.
-      exploredWallCombinationIds.clear();
+      // All the wall combinations in the open set are the same size, which means we can clear them
+      // because we will never need to check if we've explored a combination with fewer walls.
+      newWallCombinations.clear();
     }
     
     if (this.bestWallCombination == null) {

@@ -5,7 +5,6 @@ import net.pumbas.pathery.models.OptimalSolution;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
 import net.pumbas.pathery.solvers.EfficientSolver;
-import net.pumbas.pathery.solvers.ParallelOptimalSolver;
 import net.pumbas.pathery.solvers.Solver;
 
 public class Main {
