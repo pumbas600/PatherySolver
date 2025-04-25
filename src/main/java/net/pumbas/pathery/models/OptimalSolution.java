@@ -1,11 +1,10 @@
 package net.pumbas.pathery.models;
 
 import java.util.Set;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
-@Getter
-@RequiredArgsConstructor
+import lombok.Value;
+
+@Value
 public class OptimalSolution {
 
   private final int maxPathLength;

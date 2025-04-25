@@ -8,12 +8,12 @@ import java.util.Set;
 import lombok.Getter;
 import net.pumbas.pathery.exceptions.NoPathException;
 import net.pumbas.pathery.exceptions.NoSolutionException;
+import net.pumbas.pathery.models.BitSetWallCombination;
 import net.pumbas.pathery.models.OptimalSolution;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
 import net.pumbas.pathery.models.TileType;
 import net.pumbas.pathery.models.WallCombination;
-import net.pumbas.pathery.models.SetWallCombination;
 import net.pumbas.pathery.pathfinding.PathFinder;
 import net.pumbas.pathery.pathfinding.PathFinderFactory;
 
@@ -47,7 +47,7 @@ public class EfficientSolver implements Solver {
     final List<WallCombination> openWallCombinations = new ArrayList<>();
     final Set<WallCombination> newWallCombinations = new HashSet<>();
     
-    openWallCombinations.add(SetWallCombination.EMPTY);
+    openWallCombinations.add(BitSetWallCombination.empty(map));
 
     while (!openWallCombinations.isEmpty()) {
       for (final WallCombination wallCombination : openWallCombinations) {
