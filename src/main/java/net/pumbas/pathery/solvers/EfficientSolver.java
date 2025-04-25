@@ -53,7 +53,7 @@ public class EfficientSolver implements Solver {
       for (final WallCombination wallCombination : openWallCombinations) {
         try {
           this.exploredCount++;
-          final List<Position> path = pathFinder.findCompletePath(map, wallCombination.getWalls());
+          final List<Position> path = pathFinder.findCompletePath(map, wallCombination);
           final int pathLength = path.size();
 
           if (pathLength > this.currentLongestPathLength) {

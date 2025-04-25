@@ -1,9 +1,7 @@
 package net.pumbas.pathery.solvers;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -14,7 +12,9 @@ import net.pumbas.pathery.exceptions.NoSolutionException;
 import net.pumbas.pathery.models.OptimalSolution;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
+import net.pumbas.pathery.models.SetWallCombination;
 import net.pumbas.pathery.models.TileType;
+import net.pumbas.pathery.models.WallCombination;
 import net.pumbas.pathery.pathfinding.PathFinder;
 import net.pumbas.pathery.pathfinding.PathFinderFactory;
 
@@ -24,7 +24,7 @@ public class ParallelOptimalSolver implements Solver {
   private int currentLongestPathLength;
   private AtomicLong prunedCount;
   private AtomicLong exploredCount;
-  private Set<Position> bestWalls;
+  private WallCombination bestWalls;
 
   @Override
   public OptimalSolution findOptimalSolution(PatheryMap map) {
@@ -38,11 +38,11 @@ public class ParallelOptimalSolver implements Solver {
     this.currentLongestPathLength = Integer.MIN_VALUE;
 
     int totalPositions = map.getWidth() * map.getHeight();
-    Queue<Set<Position>> wallCombinations = new LinkedList<>();
-    wallCombinations.add(new HashSet<>());
+    Queue<WallCombination> wallCombinations = new LinkedList<>();
+    wallCombinations.add(SetWallCombination.EMPTY);
 
     while (!wallCombinations.isEmpty()) {
-      Set<Position> walls = wallCombinations.poll();
+      WallCombination walls = wallCombinations.poll();
       for (int positionIndex = 0; positionIndex < totalPositions; positionIndex++) {
         int x = positionIndex % map.getWidth();
         int y = positionIndex / map.getWidth();
@@ -52,13 +52,12 @@ public class ParallelOptimalSolver implements Solver {
         }
 
         Position position = new Position(x, y);
-        Set<Position> newWalls = new HashSet<>(walls);
-        newWalls.add(position);
+        WallCombination newWalls = walls.add(position);
 
         executorService.submit(
             () -> this.exploreWallCombination(map, pathFinder, newWalls));
 
-        if (newWalls.size() < map.getMaxWalls()) {
+        if (newWalls.getWallCount() < map.getMaxWalls()) {
           wallCombinations.add(newWalls);
         }
       }
@@ -77,7 +76,7 @@ public class ParallelOptimalSolver implements Solver {
               map.getMaxWalls()));
     }
 
-    return OptimalSolution.fromLongestPath(this.currentLongestPathLength, this.bestWalls);
+    return OptimalSolution.fromLongestPath(this.currentLongestPathLength, this.bestWalls.getWalls());
   }
 
   @Override
@@ -93,7 +92,7 @@ public class ParallelOptimalSolver implements Solver {
   private void exploreWallCombination(
       PatheryMap map,
       PathFinder pathFinder,
-      Set<Position> walls
+      WallCombination walls
   ) {
     try {
       this.exploredCount.incrementAndGet();
@@ -105,7 +104,7 @@ public class ParallelOptimalSolver implements Solver {
   }
 
 
-  private synchronized void updateBestPath(int pathLength, Set<Position> walls) {
+  private synchronized void updateBestPath(int pathLength, WallCombination walls) {
     if (pathLength > this.currentLongestPathLength) {
       this.currentLongestPathLength = pathLength;
       this.bestWalls = walls;

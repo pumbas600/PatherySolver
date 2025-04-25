@@ -8,7 +8,9 @@ import net.pumbas.pathery.exceptions.NoSolutionException;
 import net.pumbas.pathery.models.OptimalSolution;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
+import net.pumbas.pathery.models.SetWallCombination;
 import net.pumbas.pathery.models.TileType;
+import net.pumbas.pathery.models.WallCombination;
 import net.pumbas.pathery.pathfinding.PathFinder;
 import net.pumbas.pathery.pathfinding.PathFinderFactory;
 
@@ -20,7 +22,7 @@ public class OptimalSolver implements Solver {
   private long exploredCount;
   @Getter
   private int currentLongestPathLength;
-  private Set<Position> bestWalls;
+  private WallCombination bestWalls;
 
   @Override
   public OptimalSolution findOptimalSolution(PatheryMap map) {
@@ -30,8 +32,8 @@ public class OptimalSolver implements Solver {
     this.exploredCount = 0;
     this.currentLongestPathLength = Integer.MIN_VALUE;
 
-    Set<Set<Position>> wallCombinations = new HashSet<>();
-    wallCombinations.add(new HashSet<>());
+    Set<WallCombination> wallCombinations = new HashSet<>();
+    wallCombinations.add(SetWallCombination.EMPTY);
 
     int totalPositions = map.getWidth() * map.getHeight();
 
@@ -53,36 +55,35 @@ public class OptimalSolver implements Solver {
               map.getMaxWalls()));
     }
 
-    return OptimalSolution.fromLongestPath(this.currentLongestPathLength, this.bestWalls);
+    return OptimalSolution.fromLongestPath(this.currentLongestPathLength, this.bestWalls.getWalls());
   }
 
   private void exploreWallCombinations(
       PatheryMap map,
-      Set<Set<Position>> wallCombinations,
+      Set<WallCombination> wallCombinations,
       PathFinder pathFinder,
       Position position
   ) {
-    Set<Set<Position>> newWallCombinations = new HashSet<>();
+    Set<WallCombination> newWallCombinations = new HashSet<>();
 
-    for (Set<Position> walls : wallCombinations) {
-      Set<Position> newWalls = new HashSet<>(walls);
-      newWalls.add(position);
+    for (WallCombination walls : wallCombinations) {
+      WallCombination newWallCombination = walls.add(position);
 
       try {
         this.exploredCount++;
-        int pathLength = pathFinder.findCompletePath(map, newWalls).size();
+        int pathLength = pathFinder.findCompletePath(map, newWallCombination).size();
         if (pathLength > this.currentLongestPathLength) {
           this.currentLongestPathLength = pathLength;
-          this.bestWalls = newWalls;
+          this.bestWalls = newWallCombination;
         }
       } catch (NoPathException e) {
         this.prunedCount++;
         continue;
       }
 
-      if (newWalls.size() < map.getMaxWalls()) {
+      if (newWallCombination.getWallCount() < map.getMaxWalls()) {
         // Add it to the new set so that we don't start iterating over it in this for loop.
-        newWallCombinations.add(newWalls);
+        newWallCombinations.add(newWallCombination);
       }
     }
 

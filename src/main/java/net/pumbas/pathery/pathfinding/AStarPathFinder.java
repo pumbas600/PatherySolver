@@ -12,13 +12,14 @@ import lombok.Getter;
 import net.pumbas.pathery.exceptions.NoPathException;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
+import net.pumbas.pathery.models.WallCombination;
 
 public class AStarPathFinder implements PathFinder {
 
   @Override
   public List<Position> findPath(
       PatheryMap map,
-      Set<Position> walls,
+      WallCombination walls,
       Set<Position> startPositions,
       Set<Position> endPositions
   ) throws NoPathException {

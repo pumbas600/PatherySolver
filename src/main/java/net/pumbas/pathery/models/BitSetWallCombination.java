@@ -17,20 +17,25 @@ public class BitSetWallCombination implements WallCombination {
     return new BitSetWallCombination(new BitSet(map.getWidth() * map.getHeight()), map.getWidth());
   }
 
-  private int positionToIndex(Position position) {
+  private int positionToIndex(final Position position) {
     return position.getX() + position.getY() * this.width;
   }
 
-  private Position indexToPosition(int index) {
+  private Position indexToPosition(final int index) {
     return new Position(index % this.width, index / this.width);
   }
 
   @Override
-  public WallCombination add(Position position) {
+  public WallCombination add(final Position position) {
     final BitSet newBitSet = (BitSet) this.walls.clone();
 
     newBitSet.set(this.positionToIndex(position));
     return new BitSetWallCombination(newBitSet, this.width);
+  }
+
+  @Override
+  public boolean contains(final Position position) {
+    return this.walls.get(this.positionToIndex(position));
   }
 
   @Override

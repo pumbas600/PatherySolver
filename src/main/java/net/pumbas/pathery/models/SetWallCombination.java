@@ -4,11 +4,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 public class SetWallCombination implements WallCombination{
 
   public static SetWallCombination EMPTY = new SetWallCombination();
@@ -31,6 +30,11 @@ public class SetWallCombination implements WallCombination{
     newWalls.add(position);
 
     return new SetWallCombination(Collections.unmodifiableSet(newWalls));
+  }
+
+  @Override
+  public boolean contains(final Position position) {
+    return this.walls.contains(position);
   }
 
   @Override

@@ -93,10 +93,10 @@ public class PatheryMap {
    * bounds of the map and are not blocked by a wall or a blocking {@link TileType}.
    *
    * @param position The position to get the neighbours for
-   * @param walls    The set of walls on the map
+   * @param walls    The walls on the map
    * @return A list of the adjacent {@link Position}s for the given position
    */
-  public List<Position> getNeighbours(Position position, Set<Position> walls) {
+  public List<Position> getNeighbours(Position position, WallCombination walls) {
     return Stream.of(
             // The ordering of these is important and is defined by the pathery rules.
             position.add(Position.UP),

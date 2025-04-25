@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import net.pumbas.pathery.exceptions.NoPathException;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
+import net.pumbas.pathery.models.WallCombination;
 
 public interface PathFinder {
 
@@ -23,7 +24,7 @@ public interface PathFinder {
    * @throws NoPathException If there is no valid path
    * @see #findPath(PatheryMap, Set, Set, Set)
    */
-  default List<Position> findCompletePath(PatheryMap map, Set<Position> walls)
+  default List<Position> findCompletePath(PatheryMap map, WallCombination walls)
       throws NoPathException {
     List<Position> completePath = new ArrayList<>();
     Set<Position> startPositions = map.getStartTiles();
@@ -68,7 +69,7 @@ public interface PathFinder {
    */
   List<Position> findPath(
       PatheryMap map,
-      Set<Position> walls,
+      WallCombination walls,
       Set<Position> startPositions,
       Set<Position> endPositions
   ) throws NoPathException;
