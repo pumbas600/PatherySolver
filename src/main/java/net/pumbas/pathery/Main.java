@@ -11,21 +11,23 @@ import net.pumbas.pathery.solvers.Solver;
 public class Main {
 
   public static void main(String[] args) {
+    
     final String[] codedMap = new String[]{
-        "sooooooooooor",
-        "roooooooorror",
-        "roocoooooooof",
-        "rooroooooooor",
         "rooooooooooor",
-        "rooooooooroor"
+        "rooooooooocof",
+        "roooooooooror",
+        "rorooooooooor",
+        "roororrrrooor",
+        "sooooorooooor"
     };
 
-    final List<Position> checkpoints = List.of(new Position(3, 2));
-    final PatheryMap map = new PatheryMap(codedMap, 7, checkpoints);
+    final List<Position> checkpoints = List.of(new Position(10, 1));
+    final PatheryMap map = new PatheryMap(codedMap, 8, checkpoints);
 
     final Solver solver = new EfficientSolver();
     final OptimalSolution solution = solver.findOptimalSolution(map);
 
+    // Best path length should be 32.
     System.out.println(solution);
 
 
