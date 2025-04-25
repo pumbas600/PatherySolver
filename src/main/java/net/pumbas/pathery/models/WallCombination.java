@@ -29,9 +29,10 @@ public class WallCombination {
   }
 
   public WallCombination add(Position position) {
-    final String newUniqueId = this.uniqueId + position.getX() + "," + position.getY() + ";";
     final HashSet<Position> newWalls = new HashSet<>(this.walls);
     newWalls.add(position);
+
+    final String newUniqueId = newWalls.toString();
 
     return new WallCombination(newUniqueId, newWalls);
   }

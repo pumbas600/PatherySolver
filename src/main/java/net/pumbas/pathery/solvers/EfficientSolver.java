@@ -86,8 +86,8 @@ public class EfficientSolver implements Solver {
       }
 
       System.out.println(
-        "%d new combinations found. %d unique walls explored. Current longest path: %d"
-          .formatted(newWallCombinations.size(), exploredWallCombinationIds.size(), currentLongestPathLength)
+        "%d new combinations found. %d combinations pruned. Current longest path: %d"
+          .formatted(newWallCombinations.size(), this.prunedCount, currentLongestPathLength)
       );
       openWallCombinations.clear();
       openWallCombinations.addAll(newWallCombinations);
