@@ -99,6 +99,6 @@ public class EfficientSolver implements Solver {
               map.getMaxWalls()));
     }
 
-    return new OptimalSolution(this.currentLongestPathLength, this.bestWallCombination.getWalls());
+    return OptimalSolution.fromLongestPath(this.currentLongestPathLength, this.bestWallCombination.getWalls());
   }
 }

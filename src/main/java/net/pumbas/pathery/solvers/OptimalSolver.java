@@ -53,7 +53,7 @@ public class OptimalSolver implements Solver {
               map.getMaxWalls()));
     }
 
-    return new OptimalSolution(this.currentLongestPathLength, this.bestWalls);
+    return OptimalSolution.fromLongestPath(this.currentLongestPathLength, this.bestWalls);
   }
 
   private void exploreWallCombinations(
