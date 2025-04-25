@@ -65,4 +65,25 @@ public class OptimalSolverTests {
     Assertions.assertEquals(39, optimalSolution.getMaxMoveCount());
 
   }
+
+  @Test
+  public void testOptimalWallPositionsFoundOnSimplePatheryMap() {
+    String[] codedMap = {
+        "rooooooooooor",
+        "rooooooooocof",
+        "roooooooooror",
+        "rorooooooooor",
+        "roororrrrooor",
+        "sooooorooooor"
+    };
+
+    List<Position> checkpoints = List.of(new Position(10, 1));
+    PatheryMap map = new PatheryMap(codedMap, 8, checkpoints);
+
+    Solver solver = new EfficientSolver();
+    OptimalSolution optimalSolution = solver.findOptimalSolution(map);
+
+    Assertions.assertEquals(32, optimalSolution.getMaxMoveCount());
+
+  }
 }
