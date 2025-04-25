@@ -26,7 +26,7 @@ public class SetWallCombination implements WallCombination{
   }
 
   @Override
-  public WallCombination add(final Position position, final PatheryMap map) {
+  public WallCombination add(final Position position) {
     final HashSet<Position> newWalls = new HashSet<>(this.walls);
     newWalls.add(position);
 

@@ -68,7 +68,7 @@ public class EfficientSolver implements Solver {
                 continue;
               }
 
-              final WallCombination newWallCombination = wallCombination.add(position, map);
+              final WallCombination newWallCombination = wallCombination.add(position);
               if (!newWallCombinations.add(newWallCombination)) {
                 this.prunedCount++;
               }
