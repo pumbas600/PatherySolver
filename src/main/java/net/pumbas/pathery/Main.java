@@ -27,10 +27,10 @@ public class Main {
     final Solver solver = new EfficientSolver();
     final OptimalSolution solution = solver.findOptimalSolution(map);
     final long endTime = System.currentTimeMillis();
-    
+
     System.out.println("Execution time: " + (endTime - startTime) + "ms");
 
-    // Best path length should be 32.
+    // Best move count should be 32.
     System.out.println(solution);
 
 
