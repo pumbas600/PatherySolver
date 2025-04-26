@@ -21,8 +21,8 @@ import net.pumbas.pathery.pathfinding.PathFinderFactory;
  * This solver attempts two key things:
  * 
  * <ol>
- *   <li>When consider new places to put a wall, it can only ever be on a tile used in the current 
- *       path as otherwise the path length wont change.</li>
+ *   <li>When considering new places to put a wall, it can only ever be on a tile used in the 
+ *       current path as otherwise the path length wont change.</li>
  *   <li>All tested wall combinations should be stored to prevent duplicates being found.</li>
  * </ol>
  */
