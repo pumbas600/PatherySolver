@@ -51,7 +51,7 @@ public class ParallelOptimalSolver implements Solver {
           continue;
         }
 
-        Position position = new Position(x, y);
+        Position position = Position.of(x, y);
         WallCombination newWalls = walls.add(position);
 
         executorService.submit(

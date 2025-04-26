@@ -34,8 +34,8 @@ public class PathFinderTests {
     List<Position> path = pathFinder.findCompletePath(map, SetWallCombination.EMPTY);
 
     List<Position> expectedPath = List.of(
-        new Position(0, 2), new Position(1, 2), new Position(1, 1),
-        new Position(2, 1), new Position(3, 1), new Position(4, 1));
+        Position.of(0, 2), Position.of(1, 2), Position.of(1, 1),
+        Position.of(2, 1), Position.of(3, 1), Position.of(4, 1));
 
     Assertions.assertEquals(expectedPath, path);
   }
@@ -54,8 +54,8 @@ public class PathFinderTests {
     List<Position> path = pathFinder.findCompletePath(map, SetWallCombination.EMPTY);
 
     List<Position> expectedPath = List.of(
-        new Position(0, 1), new Position(1, 1), new Position(1, 0), new Position(2, 0),
-        new Position(3, 0), new Position(3, 1), new Position(4, 1));
+        Position.of(0, 1), Position.of(1, 1), Position.of(1, 0), Position.of(2, 0),
+        Position.of(3, 0), Position.of(3, 1), Position.of(4, 1));
 
     Assertions.assertEquals(expectedPath, path);
   }
@@ -70,13 +70,13 @@ public class PathFinderTests {
         "sooor",
     };
 
-    List<Position> checkpoints = List.of(new Position(2, 0));
+    List<Position> checkpoints = List.of(Position.of(2, 0));
     PatheryMap map = new PatheryMap(codedMap, 0, checkpoints);
     List<Position> path = pathFinder.findCompletePath(map, SetWallCombination.EMPTY);
 
     List<Position> expectedPath = List.of(
-        new Position(0, 2), new Position(1, 2), new Position(1, 1), new Position(1, 0),
-        new Position(2, 0), new Position(3, 0), new Position(3, 1), new Position(4, 1));
+        Position.of(0, 2), Position.of(1, 2), Position.of(1, 1), Position.of(1, 0),
+        Position.of(2, 0), Position.of(3, 0), Position.of(3, 1), Position.of(4, 1));
 
     Assertions.assertEquals(expectedPath, path);
   }
@@ -95,8 +95,8 @@ public class PathFinderTests {
     List<Position> path = pathFinder.findCompletePath(map, SetWallCombination.EMPTY);
 
     List<Position> expectedPath = List.of(
-        new Position(0, 1), new Position(1, 1), new Position(2, 1),
-        new Position(3, 1), new Position(4, 1));
+        Position.of(0, 1), Position.of(1, 1), Position.of(2, 1),
+        Position.of(3, 1), Position.of(4, 1));
 
     Assertions.assertEquals(expectedPath, path);
   }
@@ -115,8 +115,8 @@ public class PathFinderTests {
     List<Position> path = pathFinder.findCompletePath(map, SetWallCombination.EMPTY);
 
     List<Position> expectedPath = List.of(
-        new Position(0, 1), new Position(1, 1), new Position(2, 1), new Position(3, 1),
-        new Position(4, 1));
+        Position.of(0, 1), Position.of(1, 1), Position.of(2, 1), Position.of(3, 1),
+        Position.of(4, 1));
 
     Assertions.assertEquals(expectedPath, path);
   }
@@ -134,16 +134,16 @@ public class PathFinderTests {
         "sooorooooooor",
     };
 
-    List<Position> checkpoints = List.of(new Position(10, 2));
+    List<Position> checkpoints = List.of(Position.of(10, 2));
     PatheryMap map = new PatheryMap(codedMap, 0, checkpoints);
     List<Position> path = pathFinder.findCompletePath(map, SetWallCombination.EMPTY);
 
     List<Position> expectedPath = List.of(
-        new Position(0, 5), new Position(1, 5), new Position(1, 4), new Position(2, 4),
-        new Position(3, 4), new Position(4, 4), new Position(5, 4), new Position(6, 4),
-        new Position(7, 4), new Position(7, 3), new Position(8, 3), new Position(9, 3),
-        new Position(10, 3), new Position(10, 2), new Position(11, 2), new Position(11, 3),
-        new Position(11, 4), new Position(12, 4));
+        Position.of(0, 5), Position.of(1, 5), Position.of(1, 4), Position.of(2, 4),
+        Position.of(3, 4), Position.of(4, 4), Position.of(5, 4), Position.of(6, 4),
+        Position.of(7, 4), Position.of(7, 3), Position.of(8, 3), Position.of(9, 3),
+        Position.of(10, 3), Position.of(10, 2), Position.of(11, 2), Position.of(11, 3),
+        Position.of(11, 4), Position.of(12, 4));
 
     Assertions.assertEquals(expectedPath, path);
   }
@@ -161,19 +161,19 @@ public class PathFinderTests {
         "sooorooooooor",
     };
 
-    List<Position> checkpoints = List.of(new Position(10, 2));
+    List<Position> checkpoints = List.of(Position.of(10, 2));
     PatheryMap map = new PatheryMap(codedMap, 6, checkpoints);
-    WallCombination walls = new SetWallCombination(Set.of(new Position(10, 3), new Position(11, 2)));
+    WallCombination walls = new SetWallCombination(Set.of(Position.of(10, 3), Position.of(11, 2)));
     List<Position> path = pathFinder.findCompletePath(map, walls);
 
     List<Position> expectedPath = List.of(
-        new Position(0, 5), new Position(1, 5), new Position(1, 4), new Position(1, 3),
-        new Position(1, 2), new Position(1, 1), new Position(2, 1), new Position(3, 1),
-        new Position(4, 1), new Position(5, 1), new Position(6, 1), new Position(7, 1),
-        new Position(8, 1), new Position(9, 1), new Position(10, 1), new Position(10, 2),
-        new Position(10, 1), new Position(9, 1), new Position(8, 1), new Position(8, 2),
-        new Position(8, 3), new Position(9, 3), new Position(9, 4), new Position(9, 5),
-        new Position(10, 5), new Position(11, 5), new Position(11, 4), new Position(12, 4));
+        Position.of(0, 5), Position.of(1, 5), Position.of(1, 4), Position.of(1, 3),
+        Position.of(1, 2), Position.of(1, 1), Position.of(2, 1), Position.of(3, 1),
+        Position.of(4, 1), Position.of(5, 1), Position.of(6, 1), Position.of(7, 1),
+        Position.of(8, 1), Position.of(9, 1), Position.of(10, 1), Position.of(10, 2),
+        Position.of(10, 1), Position.of(9, 1), Position.of(8, 1), Position.of(8, 2),
+        Position.of(8, 3), Position.of(9, 3), Position.of(9, 4), Position.of(9, 5),
+        Position.of(10, 5), Position.of(11, 5), Position.of(11, 4), Position.of(12, 4));
 
     Assertions.assertEquals(expectedPath, path);
   }
@@ -191,9 +191,9 @@ public class PathFinderTests {
         "sooorooooooor",
     };
 
-    List<Position> checkpoints = List.of(new Position(10, 2));
+    List<Position> checkpoints = List.of(Position.of(10, 2));
     PatheryMap map = new PatheryMap(codedMap, 6, checkpoints);
-    WallCombination walls = new SetWallCombination(Set.of(new Position(10, 3), new Position(11, 2)));
+    WallCombination walls = new SetWallCombination(Set.of(Position.of(10, 3), Position.of(11, 2)));
     List<Position> path = pathFinder.findCompletePath(map, walls);
 
     Assertions.assertEquals(28, path.size());

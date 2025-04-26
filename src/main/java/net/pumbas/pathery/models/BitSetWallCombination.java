@@ -22,7 +22,7 @@ public class BitSetWallCombination implements WallCombination {
   }
 
   private Position indexToPosition(final int index) {
-    return new Position(index % this.width, index / this.width);
+    return Position.of(index % this.width, index / this.width);
   }
 
   @Override

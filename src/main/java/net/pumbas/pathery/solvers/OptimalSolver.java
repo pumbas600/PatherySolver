@@ -45,7 +45,7 @@ public class OptimalSolver implements Solver {
         continue;
       }
 
-      Position position = new Position(x, y);
+      Position position = Position.of(x, y);
       this.exploreWallCombinations(map, wallCombinations, pathFinder, position);
     }
 

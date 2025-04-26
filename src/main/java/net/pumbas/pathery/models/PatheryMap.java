@@ -50,9 +50,9 @@ public class PatheryMap {
         TileType tileType = this.map[x][y];
 
         if (tileType == TileType.START) {
-          this.startTiles.add(new Position(x, y));
+          this.startTiles.add(Position.of(x, y));
         } else if (tileType == TileType.FINISH) {
-          this.finishTiles.add(new Position(x, y));
+          this.finishTiles.add(Position.of(x, y));
         }
       }
     }
@@ -84,7 +84,7 @@ public class PatheryMap {
   private void validateWithinBounds(int x, int y) {
     if (!this.isWithinBounds(x, y)) {
       throw new IllegalArgumentException(String.format(
-          "The given position %s is not within the bounds of the map", new Position(x, y)));
+          "The given position %s is not within the bounds of the map", Position.of(x, y)));
     }
   }
 
