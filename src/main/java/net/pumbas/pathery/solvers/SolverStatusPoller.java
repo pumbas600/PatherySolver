@@ -1,8 +1,6 @@
 package net.pumbas.pathery.solvers;
 
 import java.time.Duration;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -48,21 +46,14 @@ public class SolverStatusPoller {
           ));
     }, pollingIntervalMs, pollingIntervalMs, TimeUnit.MILLISECONDS);
 
-    try {
-      final OptimalSolution optimalSolution = CompletableFuture
-          .supplyAsync(() -> this.solver.findOptimalSolution(this.map)).get();
+    final OptimalSolution optimalSolution = this.solver.findOptimalSolution(this.map);
 
-      final long totalTimeMs = System.currentTimeMillis() - startTimeMs;
-      System.out.println("Final Result: %s. Total Time: %s".formatted(optimalSolution, msToTimeString(totalTimeMs)));
+    final long totalTimeMs = System.currentTimeMillis() - startTimeMs;
+    System.out.println("Final Result: %s. Total Time: %s".formatted(optimalSolution, msToTimeString(totalTimeMs)));
 
-      progressPollingFuture.cancel(true);
+    progressPollingFuture.cancel(true);
 
-      return optimalSolution;
-    } catch (final InterruptedException e) {
-      throw new RuntimeException("Solver execution interrupted", e);
-    } catch (final ExecutionException e) {
-      throw new RuntimeException("Solver execution failed", e);
-    }
+    return optimalSolution;
   }
   
   private String msToTimeString(long ms) {
