@@ -41,7 +41,7 @@ public class PositionBitSet implements PositionSet {
     for (final Position position : positions) {
       newBitSet.set(this.positionToIndex(position));
     }
-    
+
     return new PositionBitSet(newBitSet, this.width);
   }
 

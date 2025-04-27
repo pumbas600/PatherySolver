@@ -1,5 +1,6 @@
 package net.pumbas.pathery.solvers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
@@ -25,7 +26,7 @@ public class DuplicateFreeSolver extends AbstractSolver implements TreeSolver<St
     super(map);
   }
 
-  public record SearchTreeNode(PositionSet wallCombination, int startIndex) {
+  public record SearchTreeNode(PositionSet wallCombination, PositionSet bannedPositions) {
   }
 
   @Override
@@ -45,7 +46,9 @@ public class DuplicateFreeSolver extends AbstractSolver implements TreeSolver<St
   @Override
   public Stack<SearchTreeNode> getInitialTree() {
     final Stack<SearchTreeNode> stack = new Stack<>();
-    stack.push(new SearchTreeNode(PositionBitSet.empty(this.map), 0));
+    final PositionBitSet emptySet = PositionBitSet.empty(this.map);
+
+    stack.push(new SearchTreeNode(emptySet, emptySet));
     return stack;
   }
 
@@ -64,22 +67,35 @@ public class DuplicateFreeSolver extends AbstractSolver implements TreeSolver<St
       }
 
       if (node.wallCombination().getCount() < this.map.getMaxWalls()) {
-        /* 
-          * We only consider nodes from the start index as we know the rest have been explored.
-          */
-        for (int index = node.startIndex(); index < path.size(); index++) {
-          final Position position = path.get(index);
-          if (this.map.getTile(position) != TileType.OPEN) {
-            continue;
-          }
+        final List<Position> unbannedPositions = this.findUnbannedPositions(path, node.bannedPositions());
+        PositionSet newBannedPositions = node.bannedPositions();
 
-          final PositionSet newWallCombination = node.wallCombination().add(position);
-          tree.push(new SearchTreeNode(newWallCombination, index));
+        for (final Position unbannedPosition : unbannedPositions) {
+          final PositionSet newWallCombination = node.wallCombination().add(unbannedPosition);
+          tree.push(new SearchTreeNode(newWallCombination, newBannedPositions));
+
+          /* 
+           * We don't want sibling nodes to try and explore this position as it will create 
+           * duplicates.
+           */
+          newBannedPositions = newBannedPositions.add(unbannedPosition);
         }
       }
     } catch (NoPathException e) {
       this.prunedCount++;
     }
+  }
+
+  private List<Position> findUnbannedPositions(
+      final List<Position> path, final PositionSet bannedPositions) {
+    final List<Position> unbannedPositions = new ArrayList<>(path.size());
+    for (Position position : path) {
+      if (this.map.getTile(position) == TileType.OPEN && !bannedPositions.contains(position)) {
+        unbannedPositions.add(position);
+      }
+    }
+
+    return unbannedPositions;
   }
   
 }
