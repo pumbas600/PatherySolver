@@ -68,17 +68,20 @@ public class DuplicateFreeSolver extends AbstractSolver implements TreeSolver<St
 
       if (node.wallCombination().getCount() < this.map.getMaxWalls()) {
         final List<Position> unbannedPositions = this.findUnbannedPositions(path, node.bannedPositions());
-        PositionSet newBannedPositions = node.bannedPositions();
 
-        for (final Position unbannedPosition : unbannedPositions) {
+        /* 
+         * Add positions to the stack in reverse order so we expand the tree from the start of the 
+         * path, rather than the end. 
+         */
+        for (int index = unbannedPositions.size() - 1; index >= 0; index--) {
+          final Position unbannedPosition = unbannedPositions.get(index);
           final PositionSet newWallCombination = node.wallCombination().add(unbannedPosition);
-          tree.push(new SearchTreeNode(newWallCombination, newBannedPositions));
 
           /* 
-           * We don't want sibling nodes to try and explore this position as it will create 
-           * duplicates.
+           * We don't want to explore positions that will be explored by sibling nodes first.
            */
-          newBannedPositions = newBannedPositions.add(unbannedPosition);
+          final PositionSet newBannedPositions = node.bannedPositions().addAll(unbannedPositions.subList(0, index));
+          tree.push(new SearchTreeNode(newWallCombination, newBannedPositions));
         }
       }
     } catch (NoPathException e) {
