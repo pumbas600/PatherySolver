@@ -31,10 +31,10 @@ public class DuplicateFreeSolver extends AbstractSolver implements TreeSolver<St
   @Override
   public OptimalSolution findOptimalSolution() {
     this.resetMetrics();
-    final Stack<SearchTreeNode> stack = this.getInitialTree(map);
+    final Stack<SearchTreeNode> stack = this.getInitialTree();
 
     while (!stack.isEmpty()) {
-      this.expandTree(stack, map);
+      this.expandTree(stack);
     }
 
     System.out.println("%d nodes explored. %d nodes pruned".formatted(this.exploredCount, this.prunedCount));
@@ -43,19 +43,19 @@ public class DuplicateFreeSolver extends AbstractSolver implements TreeSolver<St
   }
 
   @Override
-  public Stack<SearchTreeNode> getInitialTree(final PatheryMap map) {
+  public Stack<SearchTreeNode> getInitialTree() {
     final Stack<SearchTreeNode> stack = new Stack<>();
-    stack.push(new SearchTreeNode(PositionBitSet.empty(map), 0));
+    stack.push(new SearchTreeNode(PositionBitSet.empty(this.map), 0));
     return stack;
   }
 
   @Override
-  public void expandTree(final Stack<SearchTreeNode> tree, final PatheryMap map) {
+  public void expandTree(final Stack<SearchTreeNode> tree) {
     final SearchTreeNode node = tree.pop();
     this.exploredCount++;
 
     try {
-      final List<Position> path = this.pathFinder.findCompletePath(map, node.wallCombination());
+      final List<Position> path = this.pathFinder.findCompletePath(this.map, node.wallCombination());
       final int pathLength = path.size();
 
       if (pathLength > this.currentLongestPathLength) {
@@ -63,13 +63,13 @@ public class DuplicateFreeSolver extends AbstractSolver implements TreeSolver<St
         this.currentBestWallCombination = node.wallCombination();
       }
 
-      if (node.wallCombination().getCount() < map.getMaxWalls()) {
+      if (node.wallCombination().getCount() < this.map.getMaxWalls()) {
         /* 
           * We only consider nodes from the start index as we know the rest have been explored.
           */
         for (int index = node.startIndex(); index < path.size(); index++) {
           final Position position = path.get(index);
-          if (map.getTile(position) != TileType.OPEN) {
+          if (this.map.getTile(position) != TileType.OPEN) {
             continue;
           }
 
