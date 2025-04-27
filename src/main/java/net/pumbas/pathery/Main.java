@@ -1,6 +1,5 @@
 package net.pumbas.pathery;
 
-import java.time.Duration;
 import java.util.List;
 
 import net.pumbas.pathery.models.PatheryMap;
@@ -13,23 +12,25 @@ public class Main {
 
   public static void main(String[] args) {
     final String[] codedMap = new String[]{
-        "rcoooooorooooooof",
-        "rooooooooooroooof",
-        "rorooooooooooooof",
-        "roooooooooroooorf",
-        "rooooorooooooroof",
-        "roooooooooooooorf",
-        "sooorooooroooooof",
-        "roooorooooooroorf",
-        "rooooooooooorooof",
+        "rorooorooorooooof",
+        "sooooooooooororof",
+        "rooooroooooooooof",
+        "rooooooorooooooof",
+        "rorooroooooooooof",
+        "rooooorooooorooof",
+        "roocoooooroooooof",
+        "roorrooooooooooof",
+        "rocooooooooooooof",
     };
 
-    final List<Position> checkpoints = List.of(Position.of(1, 0));
-    final PatheryMap map = new PatheryMap(codedMap, 12, checkpoints);
+    final List<Position> checkpoints = List.of(Position.of(3, 6), Position.of(2, 8));
+    final PatheryMap map = new PatheryMap(codedMap, 10, checkpoints);
 
     final Solver solver = new DuplicateFreeSolver(map);
 
-    new SolverStatusPoller(solver, Duration.ofSeconds(15)).run();
+    try (final SolverStatusPoller statusPoller = new SolverStatusPoller(solver)) {
+      statusPoller.run();
+    };
   }
 
 }

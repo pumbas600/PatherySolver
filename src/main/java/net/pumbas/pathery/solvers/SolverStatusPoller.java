@@ -12,7 +12,7 @@ import net.pumbas.pathery.models.OptimalSolution;
  * Runs a solver in a separate thread and polls it's status at a given interval. This is useful for
  * long running solvers.
  */
-public class SolverStatusPoller {
+public class SolverStatusPoller implements AutoCloseable {
 
   private final Solver solver;
   private final Duration pollingInterval;
@@ -60,5 +60,10 @@ public class SolverStatusPoller {
     final long millis = duration.toMillisPart();
 
     return "%02d:%02d:%02d.%03d".formatted(hours, minutes, seconds, millis);
+  }
+
+  @Override
+  public void close() {
+    this.executorService.close();
   }
 }
