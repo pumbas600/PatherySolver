@@ -25,7 +25,7 @@ import net.pumbas.pathery.pathfinding.PathFinderFactory;
  */
 public class DuplicateFreeSolver implements Solver {
 
-  public record SearchTreeNode(WallCombination wallCombination, int index) {
+  public record SearchTreeNode(WallCombination wallCombination, int startIndex) {
   } 
 
   @Getter
@@ -45,7 +45,7 @@ public class DuplicateFreeSolver implements Solver {
     this.currentLongestPathLength = Integer.MIN_VALUE;
 
     final Stack<SearchTreeNode> stack = new Stack<>();
-    stack.push(new SearchTreeNode(BitSetWallCombination.empty(map), -1));
+    stack.push(new SearchTreeNode(BitSetWallCombination.empty(map), 0));
 
     while (!stack.isEmpty()) {
       final SearchTreeNode node = stack.pop();
@@ -65,14 +65,14 @@ public class DuplicateFreeSolver implements Solver {
            * We only consider nodes after the current one as the previous ones create duplicates 
            * that have already been explored.
            */
-          for (int index = node.index() + 1; index < path.size(); index++) {
+          for (int index = node.startIndex(); index < path.size(); index++) {
             final Position position = path.get(index);
             if (map.getTile(position) != TileType.OPEN) {
               continue;
             }
 
             final WallCombination newWallCombination = node.wallCombination().add(position);
-            stack.push(new SearchTreeNode(newWallCombination, index));
+            stack.push(new SearchTreeNode(newWallCombination, index + 1));
           }
         }
       } catch (NoPathException e) {
