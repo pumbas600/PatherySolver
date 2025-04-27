@@ -62,8 +62,7 @@ public class DuplicateFreeSolver implements Solver {
 
         if (node.wallCombination().getWallCount() < map.getMaxWalls()) {
           /* 
-           * We only consider nodes after the current one as the previous ones create duplicates 
-           * that have already been explored.
+           * We only consider nodes from the start index as we know the rest have been explored.
            */
           for (int index = node.startIndex(); index < path.size(); index++) {
             final Position position = path.get(index);
@@ -72,7 +71,7 @@ public class DuplicateFreeSolver implements Solver {
             }
 
             final WallCombination newWallCombination = node.wallCombination().add(position);
-            stack.push(new SearchTreeNode(newWallCombination, index + 1));
+            stack.push(new SearchTreeNode(newWallCombination, index));
           }
         }
       } catch (NoPathException e) {
