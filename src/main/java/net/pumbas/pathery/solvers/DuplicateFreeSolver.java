@@ -53,8 +53,9 @@ public class DuplicateFreeSolver extends AbstractSolver implements TreeSolver<St
   }
 
   @Override
-  public void expandTree(final Stack<SearchTreeNode> tree) {
+  public boolean expandTree(final Stack<SearchTreeNode> tree) {
     final SearchTreeNode node = tree.pop();
+    boolean isBetterSolution = false;
     this.exploredCount++;
 
     try {
@@ -62,6 +63,7 @@ public class DuplicateFreeSolver extends AbstractSolver implements TreeSolver<St
       final int pathLength = path.size();
 
       if (pathLength > this.currentLongestPathLength) {
+        isBetterSolution = true;
         this.currentLongestPathLength = pathLength;
         this.currentBestWallCombination = node.wallCombination();
       }
@@ -87,6 +89,8 @@ public class DuplicateFreeSolver extends AbstractSolver implements TreeSolver<St
     } catch (NoPathException e) {
       this.prunedCount++;
     }
+
+    return isBetterSolution;
   }
 
   private List<Position> findUnbannedPositions(

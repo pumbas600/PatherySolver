@@ -19,6 +19,7 @@ public interface TreeSolver<TTree extends List<?>> extends Solver {
    * Expands the tree once by exploring the next node in the tree.
    *  
    * @param tree The {@link TTree} to expand
+   * @return {@code true} if a better solution was found, {@code false} otherwise.
    */
-  void expandTree(final TTree tree);
+  boolean expandTree(final TTree tree);
 }
