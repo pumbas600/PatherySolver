@@ -1,11 +1,14 @@
 package net.pumbas.pathery;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+
 import net.pumbas.pathery.models.OptimalSolution;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
-import net.pumbas.pathery.solvers.EfficientSolver;
+import net.pumbas.pathery.solvers.DuplicateFreeSolver;
 import net.pumbas.pathery.solvers.Solver;
+import net.pumbas.pathery.solvers.SolverStatusPoller;
 
 public class Main {
 
@@ -13,30 +16,29 @@ public class Main {
     
     final long startTime = System.currentTimeMillis();
     final String[] codedMap = new String[]{
-        "rooooooooorooooof",
-        "rooooooocooooooof",
-        "roooororrooooooof",
+        "rcoooooorooooooof",
+        "rooooooooooroooof",
+        "rorooooooooooooof",
+        "roooooooooroooorf",
+        "rooooorooooooroof",
         "roooooooooooooorf",
-        "rorooooooroooooof",
-        "rooooooooooooooof",
-        "rooooorooooooooof",
-        "sorooorooroooooof",
-        "rooorooooooooooof",
+        "sooorooooroooooof",
+        "roooorooooooroorf",
+        "rooooooooooorooof",
     };
 
-    final List<Position> checkpoints = List.of(new Position(8, 1));
-    final PatheryMap map = new PatheryMap(codedMap, 13, checkpoints);
+    final List<Position> checkpoints = List.of(Position.of(1, 0));
+    final PatheryMap map = new PatheryMap(codedMap, 12, checkpoints);
 
-    final Solver solver = new EfficientSolver();
-    final OptimalSolution solution = solver.findOptimalSolution(map);
+    final Solver solver = new DuplicateFreeSolver();
+
+    final OptimalSolution solution = new SolverStatusPoller(solver, map).run();
     final long endTime = System.currentTimeMillis();
 
     System.out.println("Execution time: " + (endTime - startTime) + "ms");
 
     // Normal Map 25/04/25 - Best move count should be 87.
     System.out.println(solution);
-
-
   }
 
 }
