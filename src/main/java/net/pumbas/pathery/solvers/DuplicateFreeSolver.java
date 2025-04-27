@@ -1,6 +1,5 @@
 package net.pumbas.pathery.solvers;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
@@ -9,7 +8,6 @@ import net.pumbas.pathery.models.PositionBitSet;
 import net.pumbas.pathery.models.OptimalSolution;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
-import net.pumbas.pathery.models.TileType;
 import net.pumbas.pathery.models.PositionSet;
 
 /**
@@ -91,18 +89,6 @@ public class DuplicateFreeSolver extends AbstractSolver implements TreeSolver<St
     }
 
     return isBetterSolution;
-  }
-
-  private List<Position> findUnbannedPositions(
-      final List<Position> path, final PositionSet bannedPositions) {
-    final List<Position> unbannedPositions = new ArrayList<>(path.size());
-    for (Position position : path) {
-      if (this.map.getTile(position) == TileType.OPEN && !bannedPositions.contains(position)) {
-        unbannedPositions.add(position);
-      }
-    }
-
-    return unbannedPositions;
   }
   
 }
