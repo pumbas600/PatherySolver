@@ -82,9 +82,8 @@ public class EfficientSolver implements Solver {
       }
 
       System.out.println(
-        "%d new combinations found. %d combinations pruned. Current longest path: %d"
-          .formatted(newWallCombinations.size(), this.prunedCount, currentLongestPathLength)
-      );
+          "%d new combinations found. %d combinations pruned. Current longest path: %d"
+              .formatted(newWallCombinations.size(), this.prunedCount, currentLongestPathLength));
       openWallCombinations.clear();
       openWallCombinations.addAll(newWallCombinations);
 
@@ -92,7 +91,7 @@ public class EfficientSolver implements Solver {
       // because we will never need to check if we've explored a combination with fewer walls.
       newWallCombinations.clear();
     }
-    
+
     if (this.bestWallCombination == null) {
       throw new NoSolutionException(
           "There is no valid solution for this map using all %d walls".formatted(
