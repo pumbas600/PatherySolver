@@ -9,7 +9,7 @@ public interface Solver {
    * Find the optimal placement of walls such that the shortest path from a start tile to a finish 
    * tile via the checkpoints is as long as possible.
    *
-   * @return The {@link OptimalSolution} for the map
+   * @return The {@link OptimalSolution} for the map, or {@code null} if there is no solution
    */
   OptimalSolution findOptimalSolution();
 

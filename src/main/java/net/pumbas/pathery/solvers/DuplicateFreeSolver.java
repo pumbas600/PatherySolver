@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Stack;
 
 import net.pumbas.pathery.exceptions.NoPathException;
-import net.pumbas.pathery.exceptions.NoSolutionException;
 import net.pumbas.pathery.models.BitSetWallCombination;
 import net.pumbas.pathery.models.OptimalSolution;
 import net.pumbas.pathery.models.PatheryMap;
@@ -40,13 +39,7 @@ public class DuplicateFreeSolver extends AbstractSolver implements TreeSolver<St
 
     System.out.println("%d nodes explored. %d nodes pruned".formatted(this.exploredCount, this.prunedCount));
     
-    if (this.currentBestWallCombination == null) {
-      throw new NoSolutionException(
-          "There is no valid solution for this map using all %d walls".formatted(
-              map.getMaxWalls()));
-    }
-
-    return OptimalSolution.fromLongestPath(this.currentLongestPathLength, this.currentBestWallCombination.getWalls());
+    return OptimalSolution.fromLongestPath(this.currentLongestPathLength, this.currentBestWallCombination);
   }
 
   @Override

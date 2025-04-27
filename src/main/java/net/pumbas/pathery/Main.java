@@ -5,8 +5,6 @@ import java.util.List;
 
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
-import net.pumbas.pathery.pathfinding.PathFinder;
-import net.pumbas.pathery.pathfinding.PathFinderFactory;
 import net.pumbas.pathery.solvers.DuplicateFreeSolver;
 import net.pumbas.pathery.solvers.Solver;
 import net.pumbas.pathery.solvers.SolverStatusPoller;

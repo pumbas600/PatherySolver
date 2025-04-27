@@ -10,8 +10,13 @@ public class OptimalSolution {
   private final int maxMoveCount;
   private final Set<Position> walls;
 
-  public static OptimalSolution fromLongestPath(final int longestPathLength, final Set<Position> walls) {
+  public static OptimalSolution fromLongestPath(
+      final int longestPathLength, final WallCombination wallCombination) {
+    if (wallCombination == null) {
+      return null;
+    }
+
     /* The number of moves is the path length -1. */
-    return new OptimalSolution(longestPathLength - 1, walls);
+    return new OptimalSolution(longestPathLength - 1, wallCombination.getWalls());
   }
 }

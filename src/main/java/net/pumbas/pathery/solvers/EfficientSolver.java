@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import net.pumbas.pathery.exceptions.NoPathException;
-import net.pumbas.pathery.exceptions.NoSolutionException;
 import net.pumbas.pathery.models.BitSetWallCombination;
 import net.pumbas.pathery.models.OptimalSolution;
 import net.pumbas.pathery.models.PatheryMap;
@@ -81,12 +80,6 @@ public class EfficientSolver extends AbstractSolver {
       newWallCombinations.clear();
     }
 
-    if (this.currentBestWallCombination == null) {
-      throw new NoSolutionException(
-          "There is no valid solution for this map using all %d walls".formatted(
-              map.getMaxWalls()));
-    }
-
-    return OptimalSolution.fromLongestPath(this.currentLongestPathLength, this.currentBestWallCombination.getWalls());
+    return OptimalSolution.fromLongestPath(this.currentLongestPathLength, this.currentBestWallCombination);
   }
 }

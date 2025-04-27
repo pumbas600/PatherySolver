@@ -9,7 +9,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.pumbas.pathery.exceptions.NoPathException;
-import net.pumbas.pathery.exceptions.NoSolutionException;
 import net.pumbas.pathery.models.OptimalSolution;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
@@ -73,13 +72,7 @@ public class ParallelOptimalSolver implements Solver {
       e.printStackTrace();
     }
 
-    if (this.currentBestWallCombination == null) {
-      throw new NoSolutionException(
-          "There is no valid solution for this map using all %d walls".formatted(
-              map.getMaxWalls()));
-    }
-
-    return OptimalSolution.fromLongestPath(this.currentLongestPathLength, this.currentBestWallCombination.getWalls());
+    return OptimalSolution.fromLongestPath(this.currentLongestPathLength, this.currentBestWallCombination);
   }
 
   @Override

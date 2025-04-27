@@ -6,7 +6,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import net.pumbas.pathery.exceptions.NoSolutionException;
 import net.pumbas.pathery.models.OptimalSolution;
 
 /**
@@ -29,7 +28,7 @@ public class SolverStatusPoller {
     this.executorService = Executors.newSingleThreadScheduledExecutor();
   }
 
-  public OptimalSolution run() throws NoSolutionException {
+  public OptimalSolution run() {
     final long startTimeMs = System.currentTimeMillis();
     final long pollingIntervalMs = this.pollingInterval.toMillis();
 

@@ -3,7 +3,6 @@ package net.pumbas.pathery.solvers;
 import java.util.HashSet;
 import java.util.Set;
 import net.pumbas.pathery.exceptions.NoPathException;
-import net.pumbas.pathery.exceptions.NoSolutionException;
 import net.pumbas.pathery.models.OptimalSolution;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
@@ -38,13 +37,7 @@ public class OptimalSolver extends AbstractSolver {
       this.exploreWallCombinations(map, wallCombinations, position);
     }
 
-    if (this.currentBestWallCombination == null) {
-      throw new NoSolutionException(
-          "There is no valid solution for this map using all %d walls".formatted(
-              map.getMaxWalls()));
-    }
-
-    return OptimalSolution.fromLongestPath(this.currentLongestPathLength, this.currentBestWallCombination.getWalls());
+    return OptimalSolution.fromLongestPath(this.currentLongestPathLength, this.currentBestWallCombination);
   }
 
   private void exploreWallCombinations(
