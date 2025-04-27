@@ -1,9 +1,7 @@
 package net.pumbas.pathery;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
-import net.pumbas.pathery.models.OptimalSolution;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
 import net.pumbas.pathery.solvers.DuplicateFreeSolver;

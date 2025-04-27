@@ -42,19 +42,18 @@ public class SolverStatusPoller {
     final ScheduledFuture<?> progressPollingFuture = executorService.scheduleAtFixedRate(() -> {
       final long elapsedTimeMs = System.currentTimeMillis() - startTimeMs;
       System.out.println(
-          "Explored: %d, Pruned: %d, Current Longest Path: %d. Elapsed Time: %dms".formatted(
+          "Explored: %d, Pruned: %d, Current Longest Path: %d. Elapsed Time: %s".formatted(
               this.solver.getExploredCount(), this.solver.getPrunedCount(),
-              this.solver.getCurrentLongestPathLength(), elapsedTimeMs)
-      );
+              this.solver.getCurrentLongestPathLength(), msToTimeString(elapsedTimeMs)));
     }, pollingIntervalMs, pollingIntervalMs, TimeUnit.MILLISECONDS);
 
     try {
       final OptimalSolution optimalSolution = CompletableFuture
           .supplyAsync(() -> this.solver.findOptimalSolution(this.map)).get();
-      
+
       final long totalTimeMs = System.currentTimeMillis() - startTimeMs;
-      System.out.println("Final Result: %s. Total Time: %dms".formatted(optimalSolution, totalTimeMs));
-      
+      System.out.println("Final Result: %s. Total Time: %s".formatted(optimalSolution, msToTimeString(totalTimeMs)));
+
       progressPollingFuture.cancel(true);
 
       return optimalSolution;
@@ -63,5 +62,15 @@ public class SolverStatusPoller {
     } catch (final ExecutionException e) {
       throw new RuntimeException("Solver execution failed", e);
     }
+  }
+  
+  private String msToTimeString(long ms) {
+    final Duration duration = Duration.ofMillis(ms);
+    final long hours = duration.toHours();
+    final long minutes = duration.toMinutesPart();
+    final long seconds = duration.toSecondsPart();
+    final long millis = duration.toMillisPart();
+
+    return "%02d:%02d:%02d.%03d".formatted(hours, minutes, seconds, millis);
   }
 }
