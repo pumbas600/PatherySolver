@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Stack;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import net.pumbas.pathery.exceptions.NoPathException;
 import net.pumbas.pathery.exceptions.NoSolutionException;
 import net.pumbas.pathery.models.BitSetWallCombination;
@@ -23,7 +24,8 @@ import net.pumbas.pathery.pathfinding.PathFinderFactory;
  * 
  * Credit for this algorithm largely goes to Donut the 1st (https://github.com/Donut-the-1st).
  */
-public class DuplicateFreeSolver implements Solver {
+@RequiredArgsConstructor
+public class DuplicateFreeSolver implements TreeSolver<Stack<DuplicateFreeSolver.SearchTreeNode>> {
 
   public record SearchTreeNode(WallCombination wallCombination, int startIndex) {
   } 
@@ -36,48 +38,21 @@ public class DuplicateFreeSolver implements Solver {
   private int currentLongestPathLength;
   @Getter
   private WallCombination currentBestWallCombination;
+  
+  private PathFinder pathFinder;
 
   @Override
-  public OptimalSolution findOptimalSolution(PatheryMap map) {
-    final PathFinder pathFinder = PathFinderFactory.getPathFinder(map);
+  public OptimalSolution findOptimalSolution(final PatheryMap map) {
+    this.pathFinder = PathFinderFactory.getPathFinder(map);
     this.currentBestWallCombination = null;
     this.prunedCount = 0;
     this.exploredCount = 0;
     this.currentLongestPathLength = Integer.MIN_VALUE;
 
-    final Stack<SearchTreeNode> stack = new Stack<>();
-    stack.push(new SearchTreeNode(BitSetWallCombination.empty(map), 0));
+    final Stack<SearchTreeNode> stack = this.getInitialTree(map);
 
     while (!stack.isEmpty()) {
-      final SearchTreeNode node = stack.pop();
-      this.exploredCount++;
-
-      try {
-        final List<Position> path = pathFinder.findCompletePath(map, node.wallCombination());
-        final int pathLength = path.size();
-
-        if (pathLength > this.currentLongestPathLength) {
-          this.currentLongestPathLength = pathLength;
-          this.currentBestWallCombination = node.wallCombination();
-        }
-
-        if (node.wallCombination().getWallCount() < map.getMaxWalls()) {
-          /* 
-           * We only consider nodes from the start index as we know the rest have been explored.
-           */
-          for (int index = node.startIndex(); index < path.size(); index++) {
-            final Position position = path.get(index);
-            if (map.getTile(position) != TileType.OPEN) {
-              continue;
-            }
-
-            final WallCombination newWallCombination = node.wallCombination().add(position);
-            stack.push(new SearchTreeNode(newWallCombination, index));
-          }
-        }
-      } catch (NoPathException e) {
-        this.prunedCount++;
-      }
+      this.expandTree(stack, map);
     }
 
     
@@ -90,6 +65,46 @@ public class DuplicateFreeSolver implements Solver {
     }
 
     return OptimalSolution.fromLongestPath(this.currentLongestPathLength, this.currentBestWallCombination.getWalls());
+  }
+
+  @Override
+  public Stack<SearchTreeNode> getInitialTree(final PatheryMap map) {
+    final Stack<SearchTreeNode> stack = new Stack<>();
+    stack.push(new SearchTreeNode(BitSetWallCombination.empty(map), 0));
+    return stack;
+  }
+
+  @Override
+  public void expandTree(final Stack<SearchTreeNode> tree, final PatheryMap map) {
+    final SearchTreeNode node = tree.pop();
+    this.exploredCount++;
+
+    try {
+      final List<Position> path = this.pathFinder.findCompletePath(map, node.wallCombination());
+      final int pathLength = path.size();
+
+      if (pathLength > this.currentLongestPathLength) {
+        this.currentLongestPathLength = pathLength;
+        this.currentBestWallCombination = node.wallCombination();
+      }
+
+      if (node.wallCombination().getWallCount() < map.getMaxWalls()) {
+        /* 
+          * We only consider nodes from the start index as we know the rest have been explored.
+          */
+        for (int index = node.startIndex(); index < path.size(); index++) {
+          final Position position = path.get(index);
+          if (map.getTile(position) != TileType.OPEN) {
+            continue;
+          }
+
+          final WallCombination newWallCombination = node.wallCombination().add(position);
+          tree.push(new SearchTreeNode(newWallCombination, index));
+        }
+      }
+    } catch (NoPathException e) {
+      this.prunedCount++;
+    }
   }
   
 }
