@@ -82,11 +82,14 @@ public class RedundantIdentifyingSolver extends AbstractSolver implements TreeSo
          */
         for (int index = unbannedPositions.size() - 1; index >= 0; index--) {
           final Position unbannedPosition = unbannedPositions.get(index);
+
           final List<BlockedPath> newBlockedPaths = new ArrayList<>(currentWallCount + 1);
+          newBlockedPaths.add(new BlockedPath(PositionBitSet.of(this.map, path), unbannedPosition));
+
           PositionSet newWallCombination = node.wallCombination().add(unbannedPosition);
 
           for (final BlockedPath blockedPath : node.blockedPaths()) {
-            /* Dont include walls that have become redundant. */
+            /* Dont include existing walls that have become redundant. */
             if (!blockedPath.path().contains(unbannedPosition)) {
               newBlockedPaths.add(blockedPath);
             } else {
