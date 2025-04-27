@@ -15,8 +15,7 @@ public interface TreeSolver<TTree extends List<?>> extends Solver {
   TTree getInitialTree(final PatheryMap map);
 
   /**
-   * Expands the tree once by exploring the next node in the tree. 
-   * {@code tree}.
+   * Expands the tree once by exploring the next node in the tree.
    *  
    * @param tree The {@link TTree} to expand
    * @param map The {@link PatheryMap} being solved

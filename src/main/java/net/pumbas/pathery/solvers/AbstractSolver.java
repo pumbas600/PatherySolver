@@ -2,7 +2,7 @@ package net.pumbas.pathery.solvers;
 
 import lombok.Getter;
 import net.pumbas.pathery.models.PatheryMap;
-import net.pumbas.pathery.models.WallCombination;
+import net.pumbas.pathery.models.PositionSet;
 import net.pumbas.pathery.pathfinding.PathFinder;
 import net.pumbas.pathery.pathfinding.PathFinderFactory;
 
@@ -19,7 +19,7 @@ public abstract class AbstractSolver implements Solver {
   @Getter
   protected int currentLongestPathLength;
   @Getter
-  protected WallCombination currentBestWallCombination;
+  protected PositionSet currentBestWallCombination;
 
   protected final PathFinder pathFinder;
   protected final PatheryMap map;

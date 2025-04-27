@@ -6,9 +6,9 @@ import net.pumbas.pathery.exceptions.NoPathException;
 import net.pumbas.pathery.models.OptimalSolution;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
-import net.pumbas.pathery.models.SetWallCombination;
+import net.pumbas.pathery.models.PositionHashSet;
 import net.pumbas.pathery.models.TileType;
-import net.pumbas.pathery.models.WallCombination;
+import net.pumbas.pathery.models.PositionSet;
 
 public class OptimalSolver extends AbstractSolver {
 
@@ -20,8 +20,8 @@ public class OptimalSolver extends AbstractSolver {
   public OptimalSolution findOptimalSolution() {
     this.resetMetrics();
 
-    Set<WallCombination> wallCombinations = new HashSet<>();
-    wallCombinations.add(SetWallCombination.EMPTY);
+    Set<PositionSet> wallCombinations = new HashSet<>();
+    wallCombinations.add(PositionHashSet.EMPTY);
 
     int totalPositions = map.getWidth() * map.getHeight();
 
@@ -42,13 +42,13 @@ public class OptimalSolver extends AbstractSolver {
 
   private void exploreWallCombinations(
       PatheryMap map,
-      Set<WallCombination> wallCombinations,
+      Set<PositionSet> wallCombinations,
       Position position
   ) {
-    Set<WallCombination> newWallCombinations = new HashSet<>();
+    Set<PositionSet> newWallCombinations = new HashSet<>();
 
-    for (WallCombination walls : wallCombinations) {
-      WallCombination newWallCombination = walls.add(position);
+    for (PositionSet walls : wallCombinations) {
+      PositionSet newWallCombination = walls.add(position);
 
       try {
         this.exploredCount++;
@@ -62,7 +62,7 @@ public class OptimalSolver extends AbstractSolver {
         continue;
       }
 
-      if (newWallCombination.getWallCount() < map.getMaxWalls()) {
+      if (newWallCombination.getCount() < map.getMaxWalls()) {
         // Add it to the new set so that we don't start iterating over it in this for loop.
         newWallCombinations.add(newWallCombination);
       }

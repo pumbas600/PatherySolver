@@ -6,8 +6,8 @@ import java.util.Set;
 import net.pumbas.pathery.exceptions.NoPathException;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
-import net.pumbas.pathery.models.SetWallCombination;
-import net.pumbas.pathery.models.WallCombination;
+import net.pumbas.pathery.models.PositionHashSet;
+import net.pumbas.pathery.models.PositionSet;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ public class PathFinderTests {
     };
 
     PatheryMap map = new PatheryMap(codedMap, 0, Collections.emptyList());
-    List<Position> path = pathFinder.findCompletePath(map, SetWallCombination.EMPTY);
+    List<Position> path = pathFinder.findCompletePath(map, PositionHashSet.EMPTY);
 
     List<Position> expectedPath = List.of(
         Position.of(0, 2), Position.of(1, 2), Position.of(1, 1),
@@ -51,7 +51,7 @@ public class PathFinderTests {
     };
 
     PatheryMap map = new PatheryMap(codedMap, 0, Collections.emptyList());
-    List<Position> path = pathFinder.findCompletePath(map, SetWallCombination.EMPTY);
+    List<Position> path = pathFinder.findCompletePath(map, PositionHashSet.EMPTY);
 
     List<Position> expectedPath = List.of(
         Position.of(0, 1), Position.of(1, 1), Position.of(1, 0), Position.of(2, 0),
@@ -72,7 +72,7 @@ public class PathFinderTests {
 
     List<Position> checkpoints = List.of(Position.of(2, 0));
     PatheryMap map = new PatheryMap(codedMap, 0, checkpoints);
-    List<Position> path = pathFinder.findCompletePath(map, SetWallCombination.EMPTY);
+    List<Position> path = pathFinder.findCompletePath(map, PositionHashSet.EMPTY);
 
     List<Position> expectedPath = List.of(
         Position.of(0, 2), Position.of(1, 2), Position.of(1, 1), Position.of(1, 0),
@@ -92,7 +92,7 @@ public class PathFinderTests {
     };
 
     PatheryMap map = new PatheryMap(codedMap, 0, Collections.emptyList());
-    List<Position> path = pathFinder.findCompletePath(map, SetWallCombination.EMPTY);
+    List<Position> path = pathFinder.findCompletePath(map, PositionHashSet.EMPTY);
 
     List<Position> expectedPath = List.of(
         Position.of(0, 1), Position.of(1, 1), Position.of(2, 1),
@@ -112,7 +112,7 @@ public class PathFinderTests {
     };
 
     PatheryMap map = new PatheryMap(codedMap, 0, Collections.emptyList());
-    List<Position> path = pathFinder.findCompletePath(map, SetWallCombination.EMPTY);
+    List<Position> path = pathFinder.findCompletePath(map, PositionHashSet.EMPTY);
 
     List<Position> expectedPath = List.of(
         Position.of(0, 1), Position.of(1, 1), Position.of(2, 1), Position.of(3, 1),
@@ -136,7 +136,7 @@ public class PathFinderTests {
 
     List<Position> checkpoints = List.of(Position.of(10, 2));
     PatheryMap map = new PatheryMap(codedMap, 0, checkpoints);
-    List<Position> path = pathFinder.findCompletePath(map, SetWallCombination.EMPTY);
+    List<Position> path = pathFinder.findCompletePath(map, PositionHashSet.EMPTY);
 
     List<Position> expectedPath = List.of(
         Position.of(0, 5), Position.of(1, 5), Position.of(1, 4), Position.of(2, 4),
@@ -163,7 +163,7 @@ public class PathFinderTests {
 
     List<Position> checkpoints = List.of(Position.of(10, 2));
     PatheryMap map = new PatheryMap(codedMap, 6, checkpoints);
-    WallCombination walls = new SetWallCombination(Set.of(Position.of(10, 3), Position.of(11, 2)));
+    PositionSet walls = new PositionHashSet(Set.of(Position.of(10, 3), Position.of(11, 2)));
     List<Position> path = pathFinder.findCompletePath(map, walls);
 
     List<Position> expectedPath = List.of(
@@ -193,7 +193,7 @@ public class PathFinderTests {
 
     List<Position> checkpoints = List.of(Position.of(10, 2));
     PatheryMap map = new PatheryMap(codedMap, 6, checkpoints);
-    WallCombination walls = new SetWallCombination(Set.of(Position.of(10, 3), Position.of(11, 2)));
+    PositionSet walls = new PositionHashSet(Set.of(Position.of(10, 3), Position.of(11, 2)));
     List<Position> path = pathFinder.findCompletePath(map, walls);
 
     Assertions.assertEquals(28, path.size());

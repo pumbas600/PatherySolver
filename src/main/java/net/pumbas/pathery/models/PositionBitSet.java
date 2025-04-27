@@ -8,13 +8,13 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class BitSetWallCombination implements WallCombination {
+public class PositionBitSet implements PositionSet {
 
-  private final BitSet walls;
+  private final BitSet positions;
   private final int width;
 
-  public static BitSetWallCombination empty(final PatheryMap map) {
-    return new BitSetWallCombination(new BitSet(map.getWidth() * map.getHeight()), map.getWidth());
+  public static PositionBitSet empty(final PatheryMap map) {
+    return new PositionBitSet(new BitSet(map.getWidth() * map.getHeight()), map.getWidth());
   }
 
   private int positionToIndex(final Position position) {
@@ -26,33 +26,33 @@ public class BitSetWallCombination implements WallCombination {
   }
 
   @Override
-  public WallCombination add(final Position position) {
-    final BitSet newBitSet = (BitSet) this.walls.clone();
+  public PositionSet add(final Position position) {
+    final BitSet newBitSet = (BitSet) this.positions.clone();
 
     newBitSet.set(this.positionToIndex(position));
-    return new BitSetWallCombination(newBitSet, this.width);
+    return new PositionBitSet(newBitSet, this.width);
   }
 
   @Override
   public boolean contains(final Position position) {
-    return this.walls.get(this.positionToIndex(position));
+    return this.positions.get(this.positionToIndex(position));
   }
 
   @Override
-  public Set<Position> getWalls() {
-    return this.walls.stream()
+  public Set<Position> toSet() {
+    return this.positions.stream()
       .mapToObj(this::indexToPosition)
       .collect(Collectors.toSet());
   }
 
   @Override
-  public int getWallCount() {
-    return this.walls.cardinality();
+  public int getCount() {
+    return this.positions.cardinality();
   }
 
   @Override
   public int hashCode() {
-    return this.walls.hashCode();
+    return this.positions.hashCode();
   }
 
   @Override
@@ -65,12 +65,12 @@ public class BitSetWallCombination implements WallCombination {
       return false;
     }
 
-    final BitSetWallCombination other = (BitSetWallCombination) obj;
-    return this.walls.equals(other.walls) && this.width == other.width;
+    final PositionBitSet other = (PositionBitSet) obj;
+    return this.positions.equals(other.positions) && this.width == other.width;
   }
 
   @Override
   public String toString() {
-    return this.getWalls().toString();
+    return this.toSet().toString();
   }
 }

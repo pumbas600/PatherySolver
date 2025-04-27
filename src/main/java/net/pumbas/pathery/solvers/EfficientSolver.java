@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Set;
 
 import net.pumbas.pathery.exceptions.NoPathException;
-import net.pumbas.pathery.models.BitSetWallCombination;
+import net.pumbas.pathery.models.PositionBitSet;
 import net.pumbas.pathery.models.OptimalSolution;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
 import net.pumbas.pathery.models.TileType;
-import net.pumbas.pathery.models.WallCombination;
+import net.pumbas.pathery.models.PositionSet;
 
 /**
  * This solver attempts two key things:
@@ -32,13 +32,13 @@ public class EfficientSolver extends AbstractSolver {
   public OptimalSolution findOptimalSolution() {
     this.resetMetrics();
 
-    final List<WallCombination> openWallCombinations = new ArrayList<>();
-    final Set<WallCombination> newWallCombinations = new HashSet<>();
+    final List<PositionSet> openWallCombinations = new ArrayList<>();
+    final Set<PositionSet> newWallCombinations = new HashSet<>();
     
-    openWallCombinations.add(BitSetWallCombination.empty(map));
+    openWallCombinations.add(PositionBitSet.empty(map));
 
     while (!openWallCombinations.isEmpty()) {
-      for (final WallCombination wallCombination : openWallCombinations) {
+      for (final PositionSet wallCombination : openWallCombinations) {
         try {
           this.exploredCount++;
           final List<Position> path = pathFinder.findCompletePath(map, wallCombination);
@@ -49,14 +49,14 @@ public class EfficientSolver extends AbstractSolver {
             this.currentBestWallCombination = wallCombination;
           }
 
-          if (wallCombination.getWallCount() < map.getMaxWalls()) {
+          if (wallCombination.getCount() < map.getMaxWalls()) {
             for (final Position position : path) {
               // There are some special tiles that can be included in the path, but never be walls.
               if (map.getTile(position) != TileType.OPEN) {
                 continue;
               }
 
-              final WallCombination newWallCombination = wallCombination.add(position);
+              final PositionSet newWallCombination = wallCombination.add(position);
               if (!newWallCombinations.add(newWallCombination)) {
                 this.prunedCount++;
               }

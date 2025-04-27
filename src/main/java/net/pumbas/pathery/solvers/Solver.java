@@ -1,7 +1,7 @@
 package net.pumbas.pathery.solvers;
 
 import net.pumbas.pathery.models.OptimalSolution;
-import net.pumbas.pathery.models.WallCombination;
+import net.pumbas.pathery.models.PositionSet;
 
 public interface Solver {
 
@@ -44,5 +44,5 @@ public interface Solver {
    *  
    * @return The current wall combination that has been found
    */
-  WallCombination getCurrentBestWallCombination();
+  PositionSet getCurrentBestWallCombination();
 }

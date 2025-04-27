@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.Stack;
 
 import net.pumbas.pathery.exceptions.NoPathException;
-import net.pumbas.pathery.models.BitSetWallCombination;
+import net.pumbas.pathery.models.PositionBitSet;
 import net.pumbas.pathery.models.OptimalSolution;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
 import net.pumbas.pathery.models.TileType;
-import net.pumbas.pathery.models.WallCombination;
+import net.pumbas.pathery.models.PositionSet;
 
 /**
  * An evolution of {@link net.pumbas.pathery.solvers.EfficientSolver} that avoids creating duplicate
@@ -25,7 +25,7 @@ public class DuplicateFreeSolver extends AbstractSolver implements TreeSolver<St
     super(map);
   }
 
-  public record SearchTreeNode(WallCombination wallCombination, int startIndex) {
+  public record SearchTreeNode(PositionSet wallCombination, int startIndex) {
   }
 
   @Override
@@ -45,7 +45,7 @@ public class DuplicateFreeSolver extends AbstractSolver implements TreeSolver<St
   @Override
   public Stack<SearchTreeNode> getInitialTree(final PatheryMap map) {
     final Stack<SearchTreeNode> stack = new Stack<>();
-    stack.push(new SearchTreeNode(BitSetWallCombination.empty(map), 0));
+    stack.push(new SearchTreeNode(PositionBitSet.empty(map), 0));
     return stack;
   }
 
@@ -63,7 +63,7 @@ public class DuplicateFreeSolver extends AbstractSolver implements TreeSolver<St
         this.currentBestWallCombination = node.wallCombination();
       }
 
-      if (node.wallCombination().getWallCount() < map.getMaxWalls()) {
+      if (node.wallCombination().getCount() < map.getMaxWalls()) {
         /* 
           * We only consider nodes from the start index as we know the rest have been explored.
           */
@@ -73,7 +73,7 @@ public class DuplicateFreeSolver extends AbstractSolver implements TreeSolver<St
             continue;
           }
 
-          final WallCombination newWallCombination = node.wallCombination().add(position);
+          final PositionSet newWallCombination = node.wallCombination().add(position);
           tree.push(new SearchTreeNode(newWallCombination, index));
         }
       }

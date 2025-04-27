@@ -96,7 +96,7 @@ public class PatheryMap {
    * @param walls    The walls on the map
    * @return A list of the adjacent {@link Position}s for the given position
    */
-  public List<Position> getNeighbours(Position position, WallCombination walls) {
+  public List<Position> getNeighbours(Position position, PositionSet walls) {
     return Stream.of(
             // The ordering of these is important and is defined by the pathery rules.
             position.add(Position.UP),
