@@ -18,6 +18,12 @@ public class PositionBitSet implements PositionSet {
     return new PositionBitSet(new BitSet(map.getWidth() * map.getHeight()), map.getWidth());
   }
 
+  public static PositionBitSet of(final PatheryMap map, final Collection<Position> positions) {
+    final PositionBitSet newPositionBitSet = PositionBitSet.empty(map);
+    newPositionBitSet.internalAddAll(positions);
+    return newPositionBitSet;
+  }
+
   private int positionToIndex(final Position position) {
     return position.getX() + position.getY() * this.width;
   }
@@ -26,31 +32,43 @@ public class PositionBitSet implements PositionSet {
     return Position.of(index % this.width, index / this.width);
   }
 
+  private PositionBitSet copy() {
+    return new PositionBitSet((BitSet) this.positions.clone(), this.width);
+  }
+
+  private void internalAdd(final Position position) {
+    this.positions.set(this.positionToIndex(position));
+  }
+
+  private void internalRemove(final Position position) {
+    this.positions.clear(this.positionToIndex(position));
+  }
+
+  private void internalAddAll(final Collection<Position> positions) {
+    for (final Position position : positions) {
+      this.internalAdd(position);
+    }
+  }
+
   @Override
   public PositionSet add(final Position position) {
-    final BitSet newBitSet = (BitSet) this.positions.clone();
-
-    newBitSet.set(this.positionToIndex(position));
-    return new PositionBitSet(newBitSet, this.width);
+    final PositionBitSet newPositionSet = this.copy();
+    newPositionSet.internalAdd(position);
+    return newPositionSet;
   }
 
   @Override
   public PositionSet addAll(final Collection<Position> positions) {
-    final BitSet newBitSet = (BitSet) this.positions.clone();
-
-    for (final Position position : positions) {
-      newBitSet.set(this.positionToIndex(position));
-    }
-
-    return new PositionBitSet(newBitSet, this.width);
+    final PositionBitSet newPositionSet = this.copy();
+    newPositionSet.internalAddAll(positions);
+    return newPositionSet;
   }
 
   @Override
   public PositionSet remove(final Position position) {
-    final BitSet newBitSet = (BitSet) this.positions.clone();
-
-    newBitSet.clear(this.positionToIndex(position));
-    return new PositionBitSet(newBitSet, this.width);
+    final PositionBitSet newPositionSet = this.copy();
+    newPositionSet.internalRemove(position);
+    return newPositionSet;
   }
 
   @Override
