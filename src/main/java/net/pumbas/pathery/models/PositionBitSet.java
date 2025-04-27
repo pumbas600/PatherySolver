@@ -1,6 +1,7 @@
 package net.pumbas.pathery.models;
 
 import java.util.BitSet;
+import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -30,6 +31,17 @@ public class PositionBitSet implements PositionSet {
     final BitSet newBitSet = (BitSet) this.positions.clone();
 
     newBitSet.set(this.positionToIndex(position));
+    return new PositionBitSet(newBitSet, this.width);
+  }
+
+  @Override
+  public PositionSet addAll(final Collection<Position> positions) {
+    final BitSet newBitSet = (BitSet) this.positions.clone();
+
+    for (final Position position : positions) {
+      newBitSet.set(this.positionToIndex(position));
+    }
+    
     return new PositionBitSet(newBitSet, this.width);
   }
 

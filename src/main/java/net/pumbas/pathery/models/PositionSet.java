@@ -1,10 +1,13 @@
 package net.pumbas.pathery.models;
 
+import java.util.Collection;
 import java.util.Set;
 
 public interface PositionSet {
   
   PositionSet add(final Position position);
+
+  PositionSet addAll(final Collection<Position> positions);
 
   boolean contains(final Position position);
 

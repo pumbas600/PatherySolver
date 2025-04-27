@@ -1,5 +1,6 @@
 package net.pumbas.pathery.models;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,6 +27,14 @@ public class PositionHashSet implements PositionSet {
   public PositionSet add(final Position position) {
     final HashSet<Position> newPositions = new HashSet<>(this.positions);
     newPositions.add(position);
+
+    return new PositionHashSet(Collections.unmodifiableSet(newPositions));
+  }
+
+  @Override
+  public PositionSet addAll(final Collection<Position> positions) {
+    final HashSet<Position> newPositions = new HashSet<>(this.positions);
+    newPositions.addAll(newPositions);
 
     return new PositionHashSet(Collections.unmodifiableSet(newPositions));
   }
