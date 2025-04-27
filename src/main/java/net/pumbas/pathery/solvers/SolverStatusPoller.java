@@ -35,26 +35,32 @@ public class SolverStatusPoller {
     this.executorService = Executors.newSingleThreadScheduledExecutor();
   }
 
-  public OptimalSolution run() throws NoSolutionException{
+  public OptimalSolution run() throws NoSolutionException {
+    final long startTimeMs = System.currentTimeMillis();
+    final long pollingIntervalMs = this.pollingInterval.toMillis();
+
     final ScheduledFuture<?> progressPollingFuture = executorService.scheduleAtFixedRate(() -> {
+      final long elapsedTimeMs = System.currentTimeMillis() - startTimeMs;
       System.out.println(
-        "Explored: %d, Pruned: %d, Current Longest Path: %d"
-          .formatted(this.solver.getExploredCount(), this.solver.getPrunedCount(), this.solver.getCurrentLongestPathLength())
+          "Explored: %d, Pruned: %d, Current Longest Path: %d. Elapsed Time: %dms".formatted(
+              this.solver.getExploredCount(), this.solver.getPrunedCount(),
+              this.solver.getCurrentLongestPathLength(), elapsedTimeMs)
       );
-    }, this.pollingInterval.toMillis(), this.pollingInterval.toMillis(), TimeUnit.MILLISECONDS);
+    }, pollingIntervalMs, pollingIntervalMs, TimeUnit.MILLISECONDS);
 
     try {
-      final OptimalSolution solution = CompletableFuture.supplyAsync(() -> this.solver.findOptimalSolution(this.map)).get();
+      final OptimalSolution optimalSolution = CompletableFuture
+          .supplyAsync(() -> this.solver.findOptimalSolution(this.map)).get();
+      
+      final long totalTimeMs = System.currentTimeMillis() - startTimeMs;
+      System.out.println("Final Result: %s. Total Time: %dms".formatted(optimalSolution, totalTimeMs));
+      
       progressPollingFuture.cancel(true);
 
-      return solution;
+      return optimalSolution;
     } catch (final InterruptedException e) {
       throw new RuntimeException("Solver execution interrupted", e);
     } catch (final ExecutionException e) {
-      if (e.getCause() instanceof NoSolutionException noSolutionException) {
-        throw noSolutionException;
-      }
-
       throw new RuntimeException("Solver execution failed", e);
     }
   }

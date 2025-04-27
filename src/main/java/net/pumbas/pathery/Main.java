@@ -13,8 +13,6 @@ import net.pumbas.pathery.solvers.SolverStatusPoller;
 public class Main {
 
   public static void main(String[] args) {
-    
-    final long startTime = System.currentTimeMillis();
     final String[] codedMap = new String[]{
         "rcoooooorooooooof",
         "rooooooooooroooof",
@@ -32,13 +30,7 @@ public class Main {
 
     final Solver solver = new DuplicateFreeSolver();
 
-    final OptimalSolution solution = new SolverStatusPoller(solver, map).run();
-    final long endTime = System.currentTimeMillis();
-
-    System.out.println("Execution time: " + (endTime - startTime) + "ms");
-
-    // Normal Map 25/04/25 - Best move count should be 87.
-    System.out.println(solution);
+    new SolverStatusPoller(solver, map).run();
   }
 
 }
