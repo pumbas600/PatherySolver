@@ -2,6 +2,7 @@ package net.pumbas.pathery.solvers;
 
 import net.pumbas.pathery.models.OptimalSolution;
 import net.pumbas.pathery.models.PatheryMap;
+import net.pumbas.pathery.models.WallCombination;
 
 public interface Solver {
 
@@ -38,4 +39,12 @@ public interface Solver {
    * @return The current longest path length that has been found
    */
   int getCurrentLongestPathLength();
+
+  /**
+   * Return the current wall combination that has been found to produce the longest path so far from
+   * all the wall combinations that have been explored.
+   *  
+   * @return The current wall combination that has been found
+   */
+  WallCombination getCurrentBestWallCombination();
 }

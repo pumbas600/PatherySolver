@@ -4,7 +4,6 @@ import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -42,9 +41,12 @@ public class SolverStatusPoller {
     final ScheduledFuture<?> progressPollingFuture = executorService.scheduleAtFixedRate(() -> {
       final long elapsedTimeMs = System.currentTimeMillis() - startTimeMs;
       System.out.println(
-          "Explored: %d, Pruned: %d, Current Longest Path: %d. Elapsed Time: %s".formatted(
-              this.solver.getExploredCount(), this.solver.getPrunedCount(),
-              this.solver.getCurrentLongestPathLength(), msToTimeString(elapsedTimeMs)));
+          "[%s]: Explored: %d, Pruned: %d, Current Longest Path: %d. Current Best Wall Combination: %s"
+          .formatted(
+              msToTimeString(elapsedTimeMs), this.solver.getExploredCount(), 
+              this.solver.getPrunedCount(), this.solver.getCurrentLongestPathLength(),
+              this.solver.getCurrentBestWallCombination()
+          ));
     }, pollingIntervalMs, pollingIntervalMs, TimeUnit.MILLISECONDS);
 
     try {

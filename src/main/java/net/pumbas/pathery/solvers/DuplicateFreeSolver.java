@@ -34,12 +34,13 @@ public class DuplicateFreeSolver implements Solver {
   private long exploredCount;
   @Getter
   private int currentLongestPathLength;
-  private WallCombination bestWallCombination;
+  @Getter
+  private WallCombination currentBestWallCombination;
 
   @Override
   public OptimalSolution findOptimalSolution(PatheryMap map) {
     final PathFinder pathFinder = PathFinderFactory.getPathFinder(map);
-    this.bestWallCombination = null;
+    this.currentBestWallCombination = null;
     this.prunedCount = 0;
     this.exploredCount = 0;
     this.currentLongestPathLength = Integer.MIN_VALUE;
@@ -57,7 +58,7 @@ public class DuplicateFreeSolver implements Solver {
 
         if (pathLength > this.currentLongestPathLength) {
           this.currentLongestPathLength = pathLength;
-          this.bestWallCombination = node.wallCombination();
+          this.currentBestWallCombination = node.wallCombination();
         }
 
         if (node.wallCombination().getWallCount() < map.getMaxWalls()) {
@@ -82,13 +83,13 @@ public class DuplicateFreeSolver implements Solver {
     
     System.out.println("%d nodes explored. %d nodes pruned".formatted(this.exploredCount, this.prunedCount));
     
-    if (this.bestWallCombination == null) {
+    if (this.currentBestWallCombination == null) {
       throw new NoSolutionException(
           "There is no valid solution for this map using all %d walls".formatted(
               map.getMaxWalls()));
     }
 
-    return OptimalSolution.fromLongestPath(this.currentLongestPathLength, this.bestWallCombination.getWalls());
+    return OptimalSolution.fromLongestPath(this.currentLongestPathLength, this.currentBestWallCombination.getWalls());
   }
   
 }

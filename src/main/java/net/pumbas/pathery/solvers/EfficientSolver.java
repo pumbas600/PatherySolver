@@ -34,12 +34,13 @@ public class EfficientSolver implements Solver {
   private long exploredCount;
   @Getter
   private int currentLongestPathLength;
-  private WallCombination bestWallCombination;
+  @Getter
+  private WallCombination currentBestWallCombination;
 
   @Override
   public OptimalSolution findOptimalSolution(final PatheryMap map) {
     final PathFinder pathFinder = PathFinderFactory.getPathFinder(map);
-    this.bestWallCombination = null;
+    this.currentBestWallCombination = null;
     this.prunedCount = 0;
     this.exploredCount = 0;
     this.currentLongestPathLength = Integer.MIN_VALUE;
@@ -58,7 +59,7 @@ public class EfficientSolver implements Solver {
 
           if (pathLength > this.currentLongestPathLength) {
             this.currentLongestPathLength = pathLength;
-            this.bestWallCombination = wallCombination;
+            this.currentBestWallCombination = wallCombination;
           }
 
           if (wallCombination.getWallCount() < map.getMaxWalls()) {
@@ -92,12 +93,12 @@ public class EfficientSolver implements Solver {
       newWallCombinations.clear();
     }
 
-    if (this.bestWallCombination == null) {
+    if (this.currentBestWallCombination == null) {
       throw new NoSolutionException(
           "There is no valid solution for this map using all %d walls".formatted(
               map.getMaxWalls()));
     }
 
-    return OptimalSolution.fromLongestPath(this.currentLongestPathLength, this.bestWallCombination.getWalls());
+    return OptimalSolution.fromLongestPath(this.currentLongestPathLength, this.currentBestWallCombination.getWalls());
   }
 }

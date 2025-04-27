@@ -22,9 +22,11 @@ public class ParallelOptimalSolver implements Solver {
 
   @Getter
   private int currentLongestPathLength;
+  @Getter
+  private WallCombination currentBestWallCombination;
   private AtomicLong prunedCount;
   private AtomicLong exploredCount;
-  private WallCombination bestWalls;
+
 
   @Override
   public OptimalSolution findOptimalSolution(PatheryMap map) {
@@ -32,7 +34,7 @@ public class ParallelOptimalSolver implements Solver {
         Runtime.getRuntime().availableProcessors() - 1);
     PathFinder pathFinder = PathFinderFactory.getPathFinder(map);
 
-    this.bestWalls = null;
+    this.currentBestWallCombination = null;
     this.prunedCount = new AtomicLong();
     this.exploredCount = new AtomicLong();
     this.currentLongestPathLength = Integer.MIN_VALUE;
@@ -70,13 +72,13 @@ public class ParallelOptimalSolver implements Solver {
       e.printStackTrace();
     }
 
-    if (this.bestWalls == null) {
+    if (this.currentBestWallCombination == null) {
       throw new NoSolutionException(
           "There is no valid solution for this map using all %d walls".formatted(
               map.getMaxWalls()));
     }
 
-    return OptimalSolution.fromLongestPath(this.currentLongestPathLength, this.bestWalls.getWalls());
+    return OptimalSolution.fromLongestPath(this.currentLongestPathLength, this.currentBestWallCombination.getWalls());
   }
 
   @Override
@@ -107,7 +109,7 @@ public class ParallelOptimalSolver implements Solver {
   private synchronized void updateBestPath(int pathLength, WallCombination walls) {
     if (pathLength > this.currentLongestPathLength) {
       this.currentLongestPathLength = pathLength;
-      this.bestWalls = walls;
+      this.currentBestWallCombination = walls;
     }
   }
 
