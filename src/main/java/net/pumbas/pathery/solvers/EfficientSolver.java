@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import net.pumbas.pathery.exceptions.NoPathException;
 import net.pumbas.pathery.exceptions.NoSolutionException;
 import net.pumbas.pathery.models.BitSetWallCombination;
@@ -15,7 +16,6 @@ import net.pumbas.pathery.models.Position;
 import net.pumbas.pathery.models.TileType;
 import net.pumbas.pathery.models.WallCombination;
 import net.pumbas.pathery.pathfinding.PathFinder;
-import net.pumbas.pathery.pathfinding.PathFinderFactory;
 
 /**
  * This solver attempts two key things:
@@ -26,6 +26,7 @@ import net.pumbas.pathery.pathfinding.PathFinderFactory;
  *   <li>All tested wall combinations should be stored to prevent duplicates being found.</li>
  * </ol>
  */
+@RequiredArgsConstructor
 public class EfficientSolver implements Solver {
 
   @Getter
@@ -37,9 +38,11 @@ public class EfficientSolver implements Solver {
   @Getter
   private WallCombination currentBestWallCombination;
 
+  private final PathFinder pathFinder;
+  private final PatheryMap map;
+
   @Override
-  public OptimalSolution findOptimalSolution(final PatheryMap map) {
-    final PathFinder pathFinder = PathFinderFactory.getPathFinder(map);
+  public OptimalSolution findOptimalSolution() {
     this.currentBestWallCombination = null;
     this.prunedCount = 0;
     this.exploredCount = 0;

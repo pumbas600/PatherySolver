@@ -1,9 +1,12 @@
 package net.pumbas.pathery;
 
+import java.time.Duration;
 import java.util.List;
 
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
+import net.pumbas.pathery.pathfinding.PathFinder;
+import net.pumbas.pathery.pathfinding.PathFinderFactory;
 import net.pumbas.pathery.solvers.DuplicateFreeSolver;
 import net.pumbas.pathery.solvers.Solver;
 import net.pumbas.pathery.solvers.SolverStatusPoller;
@@ -25,10 +28,11 @@ public class Main {
 
     final List<Position> checkpoints = List.of(Position.of(1, 0));
     final PatheryMap map = new PatheryMap(codedMap, 12, checkpoints);
+    final PathFinder pathFinder = PathFinderFactory.getPathFinder(map);
 
-    final Solver solver = new DuplicateFreeSolver();
+    final Solver solver = new DuplicateFreeSolver(pathFinder, map);
 
-    new SolverStatusPoller(solver, map).run();
+    new SolverStatusPoller(solver, Duration.ofSeconds(15)).run();
   }
 
 }

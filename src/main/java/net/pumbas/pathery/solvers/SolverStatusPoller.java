@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 
 import net.pumbas.pathery.exceptions.NoSolutionException;
 import net.pumbas.pathery.models.OptimalSolution;
-import net.pumbas.pathery.models.PatheryMap;
 
 /**
  * Runs a solver in a separate thread and polls it's status at a given interval. This is useful for
@@ -17,17 +16,15 @@ import net.pumbas.pathery.models.PatheryMap;
 public class SolverStatusPoller {
 
   private final Solver solver;
-  private final PatheryMap map;
   private final Duration pollingInterval;
   private final ScheduledExecutorService executorService;
 
-  public SolverStatusPoller(final Solver solver, final PatheryMap map) {
-    this(solver, map, Duration.ofMinutes(1));
+  public SolverStatusPoller(final Solver solver) {
+    this(solver, Duration.ofMinutes(1));
   }
 
-  public SolverStatusPoller(final Solver solver, final PatheryMap map, final Duration pollingInterval) {
+  public SolverStatusPoller(final Solver solver, final Duration pollingInterval) {
     this.solver = solver;
-    this.map = map;
     this.pollingInterval = pollingInterval;
     this.executorService = Executors.newSingleThreadScheduledExecutor();
   }
@@ -46,7 +43,7 @@ public class SolverStatusPoller {
           ));
     }, pollingIntervalMs, pollingIntervalMs, TimeUnit.MILLISECONDS);
 
-    final OptimalSolution optimalSolution = this.solver.findOptimalSolution(this.map);
+    final OptimalSolution optimalSolution = this.solver.findOptimalSolution();
 
     final long totalTimeMs = System.currentTimeMillis() - startTimeMs;
     System.out.println("Final Result: %s. Total Time: %s".formatted(optimalSolution, msToTimeString(totalTimeMs)));

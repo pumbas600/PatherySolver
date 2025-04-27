@@ -7,6 +7,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import net.pumbas.pathery.exceptions.NoPathException;
 import net.pumbas.pathery.exceptions.NoSolutionException;
 import net.pumbas.pathery.models.OptimalSolution;
@@ -16,8 +17,8 @@ import net.pumbas.pathery.models.SetWallCombination;
 import net.pumbas.pathery.models.TileType;
 import net.pumbas.pathery.models.WallCombination;
 import net.pumbas.pathery.pathfinding.PathFinder;
-import net.pumbas.pathery.pathfinding.PathFinderFactory;
 
+@RequiredArgsConstructor
 public class ParallelOptimalSolver implements Solver {
 
   @Getter
@@ -27,12 +28,13 @@ public class ParallelOptimalSolver implements Solver {
   private AtomicLong prunedCount;
   private AtomicLong exploredCount;
 
+  private final PathFinder pathFinder;
+  private final PatheryMap map;
 
   @Override
-  public OptimalSolution findOptimalSolution(PatheryMap map) {
+  public OptimalSolution findOptimalSolution() {
     ExecutorService executorService = Executors.newFixedThreadPool(
         Runtime.getRuntime().availableProcessors() - 1);
-    PathFinder pathFinder = PathFinderFactory.getPathFinder(map);
 
     this.currentBestWallCombination = null;
     this.prunedCount = new AtomicLong();
@@ -56,8 +58,7 @@ public class ParallelOptimalSolver implements Solver {
         Position position = Position.of(x, y);
         WallCombination newWalls = walls.add(position);
 
-        executorService.submit(
-            () -> this.exploreWallCombination(map, pathFinder, newWalls));
+        executorService.submit(() -> this.exploreWallCombination(map, newWalls));
 
         if (newWalls.getWallCount() < map.getMaxWalls()) {
           wallCombinations.add(newWalls);
@@ -93,12 +94,11 @@ public class ParallelOptimalSolver implements Solver {
 
   private void exploreWallCombination(
       PatheryMap map,
-      PathFinder pathFinder,
       WallCombination walls
   ) {
     try {
       this.exploredCount.incrementAndGet();
-      int pathLength = pathFinder.findCompletePath(map, walls).size();
+      int pathLength = this.pathFinder.findCompletePath(map, walls).size();
       this.updateBestPath(pathLength, walls);
     } catch (NoPathException e) {
       this.prunedCount.incrementAndGet();

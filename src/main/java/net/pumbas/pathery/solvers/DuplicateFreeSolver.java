@@ -14,7 +14,6 @@ import net.pumbas.pathery.models.Position;
 import net.pumbas.pathery.models.TileType;
 import net.pumbas.pathery.models.WallCombination;
 import net.pumbas.pathery.pathfinding.PathFinder;
-import net.pumbas.pathery.pathfinding.PathFinderFactory;
 
 /**
  * An evolution of {@link net.pumbas.pathery.solvers.EfficientSolver} that avoids creating duplicate
@@ -39,11 +38,11 @@ public class DuplicateFreeSolver implements TreeSolver<Stack<DuplicateFreeSolver
   @Getter
   private WallCombination currentBestWallCombination;
   
-  private PathFinder pathFinder;
+  private final PathFinder pathFinder;
+  private final PatheryMap map;
 
   @Override
-  public OptimalSolution findOptimalSolution(final PatheryMap map) {
-    this.pathFinder = PathFinderFactory.getPathFinder(map);
+  public OptimalSolution findOptimalSolution() {
     this.currentBestWallCombination = null;
     this.prunedCount = 0;
     this.exploredCount = 0;

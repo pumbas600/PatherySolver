@@ -3,6 +3,7 @@ package net.pumbas.pathery.solvers;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import net.pumbas.pathery.exceptions.NoPathException;
 import net.pumbas.pathery.exceptions.NoSolutionException;
 import net.pumbas.pathery.models.OptimalSolution;
@@ -12,8 +13,8 @@ import net.pumbas.pathery.models.SetWallCombination;
 import net.pumbas.pathery.models.TileType;
 import net.pumbas.pathery.models.WallCombination;
 import net.pumbas.pathery.pathfinding.PathFinder;
-import net.pumbas.pathery.pathfinding.PathFinderFactory;
 
+@RequiredArgsConstructor
 public class OptimalSolver implements Solver {
 
   @Getter
@@ -25,9 +26,11 @@ public class OptimalSolver implements Solver {
   @Getter
   private WallCombination currentBestWallCombination;
 
+  private final PathFinder pathFinder;
+  private final PatheryMap map;
+
   @Override
-  public OptimalSolution findOptimalSolution(PatheryMap map) {
-    PathFinder pathFinder = PathFinderFactory.getPathFinder(map);
+  public OptimalSolution findOptimalSolution() {
     this.currentBestWallCombination = null;
     this.prunedCount = 0;
     this.exploredCount = 0;
@@ -47,7 +50,7 @@ public class OptimalSolver implements Solver {
       }
 
       Position position = Position.of(x, y);
-      this.exploreWallCombinations(map, wallCombinations, pathFinder, position);
+      this.exploreWallCombinations(map, wallCombinations, position);
     }
 
     if (this.currentBestWallCombination == null) {
@@ -62,7 +65,6 @@ public class OptimalSolver implements Solver {
   private void exploreWallCombinations(
       PatheryMap map,
       Set<WallCombination> wallCombinations,
-      PathFinder pathFinder,
       Position position
   ) {
     Set<WallCombination> newWallCombinations = new HashSet<>();
@@ -72,7 +74,7 @@ public class OptimalSolver implements Solver {
 
       try {
         this.exploredCount++;
-        int pathLength = pathFinder.findCompletePath(map, newWallCombination).size();
+        int pathLength = this.pathFinder.findCompletePath(map, newWallCombination).size();
         if (pathLength > this.currentLongestPathLength) {
           this.currentLongestPathLength = pathLength;
           this.currentBestWallCombination = newWallCombination;
