@@ -29,7 +29,7 @@ public class AStarPathFinder implements PathFinder {
     for (Position startPosition : startPositions) {
       if (endPositions.contains(startPosition)) {
         // This won't happen due to the way the PatheryMap is constructed, but is included for
-        // completeness. Note that an ArrayList is specifically returned so that its mutable.
+        // completeness.
         return List.of(startPosition);
       }
 
