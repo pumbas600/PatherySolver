@@ -1,5 +1,6 @@
 package net.pumbas.pathery.models;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -7,6 +8,11 @@ import java.util.stream.Stream;
 import lombok.Getter;
 
 public class PatheryMap {
+
+  /* The ordering of these is important and is defined by the pathery rules. */
+  private static final Position[] NEIGHBOURS = new Position[] {
+      Position.UP, Position.RIGHT, Position.DOWN, Position.LEFT
+  };
 
   @Getter
   private final int width;
@@ -22,6 +28,7 @@ public class PatheryMap {
   private final List<Position> checkpoints;
 
   private final TileType[][] map;
+
 
   public PatheryMap(int width, int height, int maxWalls, List<Position> checkpoints) {
     this.width = width;
@@ -97,16 +104,17 @@ public class PatheryMap {
    * @return A list of the adjacent {@link Position}s for the given position
    */
   public List<Position> getNeighbours(Position position, PositionSet walls) {
-    return Stream.of(
-            // The ordering of these is important and is defined by the pathery rules.
-            position.add(Position.UP),
-            position.add(Position.RIGHT),
-            position.add(Position.DOWN),
-            position.add(Position.LEFT))
-        .filter(neighbour -> this.isWithinBounds(neighbour)
-            && !this.getTile(neighbour).isBlocked()
-            && !walls.contains(neighbour))
-        .toList();
+    final List<Position> neighbours = new ArrayList<>(NEIGHBOURS.length);
+    for (Position neighbour : NEIGHBOURS) {
+      final Position neighbourPosition = position.add(neighbour);
+
+      if (this.isWithinBounds(neighbourPosition) && !this.getTile(neighbourPosition).isBlocked()
+          && !walls.contains(neighbourPosition)) {
+        neighbours.add(neighbourPosition);
+      }
+    }
+
+    return neighbours;
   }
 
   /**
