@@ -9,6 +9,8 @@ public interface PositionSet {
 
   PositionSet addAll(final Collection<Position> positions);
 
+  PositionSet remove(final Position position);
+
   boolean contains(final Position position);
 
   Set<Position> toSet();

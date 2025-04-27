@@ -40,6 +40,14 @@ public class PositionHashSet implements PositionSet {
   }
 
   @Override
+  public PositionSet remove(final Position position) {
+    final HashSet<Position> newPositions = new HashSet<>(this.positions);
+    newPositions.remove(position);
+
+    return new PositionHashSet(Collections.unmodifiableSet(newPositions));
+  }
+
+  @Override
   public boolean contains(final Position position) {
     return this.positions.contains(position);
   }

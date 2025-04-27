@@ -46,6 +46,14 @@ public class PositionBitSet implements PositionSet {
   }
 
   @Override
+  public PositionSet remove(final Position position) {
+    final BitSet newBitSet = (BitSet) this.positions.clone();
+
+    newBitSet.clear(this.positionToIndex(position));
+    return new PositionBitSet(newBitSet, this.width);
+  }
+
+  @Override
   public boolean contains(final Position position) {
     return this.positions.get(this.positionToIndex(position));
   }
