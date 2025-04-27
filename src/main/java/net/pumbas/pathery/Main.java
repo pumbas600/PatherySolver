@@ -28,9 +28,8 @@ public class Main {
 
     final List<Position> checkpoints = List.of(Position.of(1, 0));
     final PatheryMap map = new PatheryMap(codedMap, 12, checkpoints);
-    final PathFinder pathFinder = PathFinderFactory.getPathFinder(map);
 
-    final Solver solver = new DuplicateFreeSolver(pathFinder, map);
+    final Solver solver = new DuplicateFreeSolver(map);
 
     new SolverStatusPoller(solver, Duration.ofSeconds(15)).run();
   }

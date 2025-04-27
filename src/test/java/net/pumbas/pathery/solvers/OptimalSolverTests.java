@@ -1,12 +1,10 @@
 package net.pumbas.pathery.solvers;
 
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 import net.pumbas.pathery.models.OptimalSolution;
 import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
-import net.pumbas.pathery.pathfinding.PathFinderFactory;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -24,7 +22,7 @@ public class OptimalSolverTests {
     List<Position> checkpoints = List.of(Position.of(2, 0));
     PatheryMap map = new PatheryMap(codedMap, 1, checkpoints);
 
-    Solver solver = new OptimalSolver(PathFinderFactory.getPathFinder(map), map);
+    Solver solver = new OptimalSolver(map);
     OptimalSolution optimalSolution = solver.findOptimalSolution();
 
     Assertions.assertEquals(11, optimalSolution.getMaxMoveCount());
@@ -42,7 +40,7 @@ public class OptimalSolverTests {
     List<Position> checkpoints = List.of(Position.of(2, 0));
     PatheryMap map = new PatheryMap(codedMap, 1, checkpoints);
 
-    Solver solver = new EfficientSolver(PathFinderFactory.getPathFinder(map), map);
+    Solver solver = new EfficientSolver(map);
     OptimalSolution optimalSolution = solver.findOptimalSolution();
 
     Assertions.assertEquals(8, optimalSolution.getMaxMoveCount());
@@ -62,7 +60,7 @@ public class OptimalSolverTests {
     List<Position> checkpoints = List.of(Position.of(8, 2));
     PatheryMap map = new PatheryMap(codedMap, 6, checkpoints);
 
-    Solver solver = new EfficientSolver(PathFinderFactory.getPathFinder(map), map);
+    Solver solver = new EfficientSolver(map);
     OptimalSolution optimalSolution = solver.findOptimalSolution();
 
     Assertions.assertEquals(39, optimalSolution.getMaxMoveCount());
@@ -83,7 +81,7 @@ public class OptimalSolverTests {
     List<Position> checkpoints = List.of(Position.of(10, 1));
     PatheryMap map = new PatheryMap(codedMap, 8, checkpoints);
 
-    Solver solver = new EfficientSolver(PathFinderFactory.getPathFinder(map), map);
+    Solver solver = new EfficientSolver(map);
     OptimalSolution optimalSolution = solver.findOptimalSolution();
 
     Assertions.assertEquals(32, optimalSolution.getMaxMoveCount());

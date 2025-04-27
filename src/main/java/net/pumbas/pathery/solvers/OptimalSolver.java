@@ -2,8 +2,6 @@ package net.pumbas.pathery.solvers;
 
 import java.util.HashSet;
 import java.util.Set;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import net.pumbas.pathery.exceptions.NoPathException;
 import net.pumbas.pathery.exceptions.NoSolutionException;
 import net.pumbas.pathery.models.OptimalSolution;
@@ -12,29 +10,16 @@ import net.pumbas.pathery.models.Position;
 import net.pumbas.pathery.models.SetWallCombination;
 import net.pumbas.pathery.models.TileType;
 import net.pumbas.pathery.models.WallCombination;
-import net.pumbas.pathery.pathfinding.PathFinder;
 
-@RequiredArgsConstructor
-public class OptimalSolver implements Solver {
+public class OptimalSolver extends AbstractSolver {
 
-  @Getter
-  private long prunedCount;
-  @Getter
-  private long exploredCount;
-  @Getter
-  private int currentLongestPathLength;
-  @Getter
-  private WallCombination currentBestWallCombination;
-
-  private final PathFinder pathFinder;
-  private final PatheryMap map;
+  public OptimalSolver(final PatheryMap map) {
+    super(map);
+  }
 
   @Override
   public OptimalSolution findOptimalSolution() {
-    this.currentBestWallCombination = null;
-    this.prunedCount = 0;
-    this.exploredCount = 0;
-    this.currentLongestPathLength = Integer.MIN_VALUE;
+    this.resetMetrics();
 
     Set<WallCombination> wallCombinations = new HashSet<>();
     wallCombinations.add(SetWallCombination.EMPTY);

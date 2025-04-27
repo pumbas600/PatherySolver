@@ -3,8 +3,6 @@ package net.pumbas.pathery.solvers;
 import java.util.List;
 import java.util.Stack;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import net.pumbas.pathery.exceptions.NoPathException;
 import net.pumbas.pathery.exceptions.NoSolutionException;
 import net.pumbas.pathery.models.BitSetWallCombination;
@@ -13,7 +11,6 @@ import net.pumbas.pathery.models.PatheryMap;
 import net.pumbas.pathery.models.Position;
 import net.pumbas.pathery.models.TileType;
 import net.pumbas.pathery.models.WallCombination;
-import net.pumbas.pathery.pathfinding.PathFinder;
 
 /**
  * An evolution of {@link net.pumbas.pathery.solvers.EfficientSolver} that avoids creating duplicate
@@ -23,38 +20,24 @@ import net.pumbas.pathery.pathfinding.PathFinder;
  * 
  * Credit for this algorithm largely goes to Donut the 1st (https://github.com/Donut-the-1st).
  */
-@RequiredArgsConstructor
-public class DuplicateFreeSolver implements TreeSolver<Stack<DuplicateFreeSolver.SearchTreeNode>> {
+public class DuplicateFreeSolver extends AbstractSolver implements TreeSolver<Stack<DuplicateFreeSolver.SearchTreeNode>> {
+
+  public DuplicateFreeSolver(final PatheryMap map) {
+    super(map);
+  }
 
   public record SearchTreeNode(WallCombination wallCombination, int startIndex) {
-  } 
-
-  @Getter
-  private long prunedCount;
-  @Getter
-  private long exploredCount;
-  @Getter
-  private int currentLongestPathLength;
-  @Getter
-  private WallCombination currentBestWallCombination;
-  
-  private final PathFinder pathFinder;
-  private final PatheryMap map;
+  }
 
   @Override
   public OptimalSolution findOptimalSolution() {
-    this.currentBestWallCombination = null;
-    this.prunedCount = 0;
-    this.exploredCount = 0;
-    this.currentLongestPathLength = Integer.MIN_VALUE;
-
+    this.resetMetrics();
     final Stack<SearchTreeNode> stack = this.getInitialTree(map);
 
     while (!stack.isEmpty()) {
       this.expandTree(stack, map);
     }
 
-    
     System.out.println("%d nodes explored. %d nodes pruned".formatted(this.exploredCount, this.prunedCount));
     
     if (this.currentBestWallCombination == null) {
