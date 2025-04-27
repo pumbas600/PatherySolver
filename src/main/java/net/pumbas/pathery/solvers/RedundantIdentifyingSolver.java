@@ -15,8 +15,8 @@ import net.pumbas.pathery.models.PositionSet;
 /**
  * An evolution of {@link net.pumbas.pathery.solvers.DuplicateFreeSolver}, however, it removes walls
  * that block paths that are now already blocked by another wall. This does increase the 
- * search space, which means it will take longer to prove it's the most optimal solution but it 
- * also causes it to converge on a better solution faster. 
+ * search space as it create a duplicate every time, meaning it takes longer to prove it's the most
+ * optimal solution but it also causes it to converge on a better solution faster. 
  * 
  * Credit for this algorithm largely goes to Donut the 1st (https://github.com/Donut-the-1st).
  */
@@ -75,6 +75,7 @@ public class RedundantIdentifyingSolver extends AbstractSolver implements TreeSo
       final int currentWallCount = node.wallCombination().getCount();
       if (currentWallCount < this.map.getMaxWalls()) {
         final List<Position> unbannedPositions = this.findUnbannedPositions(path, node.bannedPositions());
+        final PositionSet pathPositionSet = PositionBitSet.of(this.map, path);
 
         /* 
          * Add positions to the stack in reverse order so we expand the tree from the start of the 
@@ -84,16 +85,16 @@ public class RedundantIdentifyingSolver extends AbstractSolver implements TreeSo
           final Position unbannedPosition = unbannedPositions.get(index);
 
           final List<BlockedPath> newBlockedPaths = new ArrayList<>(currentWallCount + 1);
-          newBlockedPaths.add(new BlockedPath(PositionBitSet.of(this.map, path), unbannedPosition));
+          newBlockedPaths.add(new BlockedPath(pathPositionSet, unbannedPosition));
 
           PositionSet newWallCombination = node.wallCombination().add(unbannedPosition);
 
           for (final BlockedPath blockedPath : node.blockedPaths()) {
             /* Dont include existing walls that have become redundant. */
-            if (!blockedPath.path().contains(unbannedPosition)) {
-              newBlockedPaths.add(blockedPath);
-            } else {
+            if (blockedPath.path().contains(unbannedPosition)) {
               newWallCombination = newWallCombination.remove(blockedPath.blockedAt);
+            } else {
+              newBlockedPaths.add(blockedPath);
             }
           }
 
