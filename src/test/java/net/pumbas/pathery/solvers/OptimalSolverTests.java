@@ -47,7 +47,7 @@ public class OptimalSolverTests {
   }
 
   @Test
-  public void testOptimalWallPositionsFoundOnComplexMap() {
+  public void testOptimalSolutionFoundOnComplexMap() {
     String[] codedMap = {
         "rooooooooooor",
         "rooroooooroof",
@@ -60,7 +60,7 @@ public class OptimalSolverTests {
     List<Position> checkpoints = List.of(Position.of(8, 2));
     PatheryMap map = new PatheryMap(codedMap, 6, checkpoints);
 
-    Solver solver = new EfficientSolver(map);
+    Solver solver = new DuplicateFreeSolver(map);
     OptimalSolution optimalSolution = solver.findOptimalSolution();
 
     Assertions.assertEquals(39, optimalSolution.getMaxMoveCount());
@@ -68,7 +68,7 @@ public class OptimalSolverTests {
   }
 
   @Test
-  public void testOptimalWallPositionsFoundOnSimplePatheryMap() {
+  public void testOptimalSolutionFoundOnSimplePatheryMap25_04_25() {
     String[] codedMap = {
         "rooooooooooor",
         "rooooooooocof",
@@ -81,10 +81,31 @@ public class OptimalSolverTests {
     List<Position> checkpoints = List.of(Position.of(10, 1));
     PatheryMap map = new PatheryMap(codedMap, 8, checkpoints);
 
-    Solver solver = new EfficientSolver(map);
+    Solver solver = new DuplicateFreeSolver(map);
     OptimalSolution optimalSolution = solver.findOptimalSolution();
 
     Assertions.assertEquals(32, optimalSolution.getMaxMoveCount());
-
   }
+
+  @Test
+  public void testOptimalSolutionFoundOnSimplePatheryMap27_04_25() {
+    String[] codedMap = {
+        "rorroooooooor",
+        "rooooooooooor",
+        "rocooooooooor",
+        "rooorooooooof",
+        "sooooooooooor",
+        "rooorooooooor",
+    };
+
+    List<Position> checkpoints = List.of(Position.of(2, 2));
+    PatheryMap map = new PatheryMap(codedMap, 6, checkpoints);
+
+    Solver solver = new DuplicateFreeSolver(map);
+    OptimalSolution optimalSolution = solver.findOptimalSolution();
+
+    Assertions.assertEquals(37, optimalSolution.getMaxMoveCount());
+  }
+
+
 }
