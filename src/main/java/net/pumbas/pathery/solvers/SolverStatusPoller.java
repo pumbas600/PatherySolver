@@ -41,8 +41,7 @@ public class SolverStatusPoller {
     final ScheduledFuture<?> progressPollingFuture = executorService.scheduleAtFixedRate(() -> {
       final long elapsedTimeMs = System.currentTimeMillis() - startTimeMs;
       System.out.println(
-          "[%s]: Explored: %d, Pruned: %d, Current Longest Path: %d. Current Best Wall Combination: %s"
-          .formatted(
+          "[%s]: Explored: %d, Pruned: %d, Path Length: %d. Best Walls: %s".formatted(
               msToTimeString(elapsedTimeMs), this.solver.getExploredCount(), 
               this.solver.getPrunedCount(), this.solver.getCurrentLongestPathLength(),
               this.solver.getCurrentBestWallCombination()
